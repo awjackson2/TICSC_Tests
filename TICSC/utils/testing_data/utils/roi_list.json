@@ -1,0 +1,10 @@
+{
+  "ROIs": {
+    "DeadCenter": "90 109 91",
+    "Anterior" : "95 73 127",
+    "Posterior" : "95 56 116",
+    "RSC" : "95 79 89",
+    "Thalamus" : "101 101 81",
+    "L_Insula" : "122 139 57"
+  }
+}

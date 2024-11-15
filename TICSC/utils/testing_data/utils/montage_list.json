@@ -1,0 +1,166 @@
+{
+  "uni_polar_montages": {
+    "Nested": [
+      [
+        "E069",
+        "E202"
+      ],
+      [
+        "E064",
+        "E194"
+      ]
+    ],
+    "Nested(Narrow)": [
+      [
+        "E069",
+        "E202"
+      ],
+      [
+        "E059",
+        "E183"
+      ]
+    ],
+    "Parallel_Vertical": [
+      [
+        "E048",
+        "E085"
+      ],
+      [
+        "E222",
+        "E171"
+      ]
+    ],
+    "Parallel_Vertical(Narrow)": [
+      [
+        "E029",
+        "E099"
+      ],
+      [
+        "E005",
+        "E141"
+      ]
+    ],
+    "Parallel_Vertical(Wide)": [
+      [
+        "E055",
+        "E084"
+      ],
+      [
+        "E221",
+        "E179"
+      ]
+    ],
+    "Parallel_Horizontal": [
+      [
+        "E048",
+        "E222"
+      ],
+      [
+        "E085",
+        "E171"
+      ]
+    ],
+    "Parallel_Horizontal(Narrow)": [
+      [
+        "E057",
+        "E204"
+      ],
+      [
+        "E071",
+        "E181"
+      ]
+    ],
+    "Parallel_Horizontal(Wide)": [
+      [
+        "E047",
+        "E002"
+      ],
+      [
+        "E096",
+        "E170"
+      ]
+    ],
+    "X_Montage": [
+      [
+        "E048",
+        "E171"
+      ],
+      [
+        "E085",
+        "E222"
+      ]
+    ],
+    "X_Montage(Narrow)": [
+      [
+        "E041",
+        "E163"
+      ],
+      [
+        "E077",
+        "E214"
+      ]
+    ],
+    "X_Montage(Wide)": [
+      [
+        "E054",
+        "E178"
+      ],
+      [
+        "E095",
+        "E001"
+      ]
+    ],
+    "V_Montage": [
+      [
+        "E070",
+        "E125"
+      ],
+      [
+        "E193",
+        "E138"
+      ]
+    ],
+    "V_Montage(Narrow)": [
+      [
+        "E070",
+        "E108"
+      ],
+      [
+        "E193",
+        "E151"
+      ]
+    ],
+    "Little_Pairs": [
+      [
+        "E078",
+        "E088"
+      ],
+      [
+        "E215",
+        "E206"
+      ]
+    ],
+    "V_Montage(ShiftedNorth)": [
+      [
+        "E100",
+        "E049"
+      ],
+      [
+        "E129",
+        "E213"
+      ]
+    ]
+  },
+  "multi_polar_montages": {
+    "MultipolarExample": [
+      [
+        "E001",
+        "E002"
+      ],
+      [
+        "E003",
+        "E004"
+      ]
+    ]
+  }
+}
