@@ -1,0 +1,27 @@
+name: CI Pipeline with Docker
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker
+      run: |
+        docker --version  # Confirm Docker is installed
+
+    - name: Build Docker Image
+      run: |
+        docker build --pull --rm -f "Dockerfile" -t ticsc-tests:latest "."  # Build the Docker image using your Dockerfile
+
+    - name: Run Tests Inside Docker
+      run: |
+        docker run --rm ticsc-tests simnibs_python -m pytest /utils/tests/  # Adjust the command as needed to run tests
