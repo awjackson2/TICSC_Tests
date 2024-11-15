@@ -24,4 +24,4 @@ jobs:
 
     - name: Run Tests Inside Docker
       run: |
-        docker run --rm ticsc-tests simnibs_python -m pytest /utils/tests/  # Adjust the command as needed to run tests
+        docker run --rm ticsc-tests simnibs_python -m pytest TICSC/utils/tests/  # Adjust the command as needed to run tests
