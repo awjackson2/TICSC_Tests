@@ -1,0 +1,7 @@
+pytest
+dcm2niix
+numpy
+scipy
+pandas
+meshio
+nibabel
