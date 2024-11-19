@@ -67,6 +67,7 @@ RUN apt-get update && apt-get install -y \
     fontconfig \
     execstack \
     imagemagick \
+    dos2unix \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install Python packages directly into the system Python environment
@@ -87,17 +88,28 @@ ENV SIMNIBSDIR="/root/SimNIBS-4.1"
 # Copy the entire project into the container
 COPY . .
 
-# Ensure the target directory exists
-RUN mkdir -p TICSC/utils/testing_data
+# Make the testing project dir that tests will use
+RUN mkdir -p mnt/testing_project_dir
+RUN mkdir -p mnt/testing_project_dir/utils
+RUN mkdir -p mnt/testing_project_dir/Subjects
+RUN mkdir -p mnt/testing_project_dir/Simulations
+
+COPY TICSC/utils/testing_data/montage_list.json mnt/testing_project_dir/utils
+COPY TICSC/utils/testing_data/roi_list.json mnt/testing_project_dir/utils
+COPY TICSC/utils/testing_data/EGI_template.csv mnt/testing_project_dir/Subjects/m2m_ernie/eeg_positions/EGI_template.csv
 
 # Download the zip file with additional flags to handle failures better
-RUN curl -L https://github.com/simnibs/example-dataset/releases/latest/download/simnibs4_examples.zip -o TICSC/utils/testing_data/simnibs4_examples.zip || echo "Download failed"
+RUN curl -L https://github.com/simnibs/example-dataset/releases/latest/download/simnibs4_examples.zip -o mnt/testing_project_dir/Subjects/simnibs4_examples.zip || echo "Download failed"
 
 # Optionally, you can unzip the file if needed
-RUN apt-get install -y unzip && unzip TICSC/utils/testing_data/simnibs4_examples.zip -d TICSC/utils/testing_data/
+RUN apt-get install -y unzip && unzip mnt/testing_project_dir/Subjects/simnibs4_examples.zip -d mnt/testing_project_dir/Subjects
 
 # Set PYTHONPATH to include TICSC
 ENV PYTHONPATH=/TICSC:$PYTHONPATH
+
+ENV PROJECT_DIR_NAME="testing_project_dir"
+
+RUN find /TICSC/analyzer -type f -name "*.sh" -exec dos2unix {} +
 
 # Set the entrypoint to run pytest directly
 #CMD ["pytest", "Unit_Tests"]
