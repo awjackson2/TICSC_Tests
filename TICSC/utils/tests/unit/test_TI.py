@@ -7,18 +7,12 @@ from pytest import MonkeyPatch
 
 @pytest.fixture
 def set_sys_variables(monkeypatch):
-     is_running_in_docker = True
-     if (is_running_in_docker):
-        monkeypatch.setattr(sys, 'argv', ["script_name.py", "test_arg1", "test_arg2", "utils/testing_project_dir/utils","test_arg4"])
-        # Import mTI after modifying sys.argv
-        print("Using Docker")
-        from analyzer import TI    
-     else:
-        monkeypatch.setattr(sys, 'argv', ["script_name.py", "test_arg1", "test_arg2", "TICSC/utils/testing_project_dir/utils","test_arg4"])
-         # Import mTI after modifying sys.argv
-        print("Not Using Docker")
-        from TICSC.analyzer import TI
-     return TI
+    monkeypatch.setattr(sys, 'argv', ["script_name.py", "test_arg1", "test_arg2", "/TICSC/utils/testing_data/utils","test_arg4"])
+    # Import mTI after modifying sys.argv
+    print("Using Docker")
+    from analyzer import TI    
+    # Return the imported module so it can be used in tests
+    return TI
 
 def test_validate_montage_empty_montage_list(set_sys_variables):  # Pass the fixture
     TI = set_sys_variables

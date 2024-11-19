@@ -94,9 +94,9 @@ RUN mkdir -p mnt/testing_project_dir/utils
 RUN mkdir -p mnt/testing_project_dir/Subjects
 RUN mkdir -p mnt/testing_project_dir/Simulations
 
-COPY TICSC/utils/testing_data/montage_list.json mnt/testing_project_dir/utils
-COPY TICSC/utils/testing_data/roi_list.json mnt/testing_project_dir/utils
-COPY TICSC/utils/testing_data/EGI_template.csv mnt/testing_project_dir/Subjects/m2m_ernie/eeg_positions/EGI_template.csv
+COPY TICSC/utils/testing_data/utils/montage_list.json mnt/testing_project_dir/utils
+COPY TICSC/utils/testing_data/utils/roi_list.json mnt/testing_project_dir/utils
+COPY TICSC/utils/testing_data/utils/EGI_template.csv mnt/testing_project_dir/Subjects/m2m_ernie/eeg_positions/EGI_template.csv
 
 # Download the zip file with additional flags to handle failures better
 RUN curl -L https://github.com/simnibs/example-dataset/releases/latest/download/simnibs4_examples.zip -o mnt/testing_project_dir/Subjects/simnibs4_examples.zip || echo "Download failed"

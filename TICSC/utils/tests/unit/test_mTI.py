@@ -7,20 +7,10 @@ from pytest import MonkeyPatch
 
 @pytest.fixture
 def set_sys_variables(monkeypatch):
-    is_running_in_docker = True
-    if (is_running_in_docker):
-        monkeypatch.setattr(sys, 'argv', ["script_name.py", "test_arg1", "test_arg2", "utils/testing_project_dir/utils","test_arg4"])
-        # Import mTI after modifying sys.argv
-        print("Using Docker")
-        from analyzer import mTI    
-    else:
-        monkeypatch.setattr(sys, 'argv', ["script_name.py", "test_arg1", "test_arg2", "TICSC/utils/testing_project_dir/utils","test_arg4"])
-         # Import mTI after modifying sys.argv
-        print("Not Using Docker")
-        from TICSC.analyzer import mTI
-    
-
-
+    monkeypatch.setattr(sys, 'argv', ["script_name.py", "test_arg1", "test_arg2", "/TICSC/utils/testing_data/utils","test_arg4"])
+    # Import mTI after modifying sys.argv
+    print("Using Docker")
+    from analyzer import mTI    
     # Return the imported module so it can be used in tests
     return mTI
 

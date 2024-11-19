@@ -20,8 +20,8 @@ jobs:
 
     - name: Build Docker Image
       run: |
-        docker build --pull --rm -f "Dockerfile" -t ticsc-tests:latest "."  # Build the Docker image using your Dockerfile
+        docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "."  # Build the Docker image using your Dockerfile
 
     - name: Run Tests Inside Docker
       run: |
-        docker run --rm ticsc-tests simnibs_python -m pytest TICSC/utils/tests/  # Adjust the command as needed to run tests
+        docker run --rm ticsctests simnibs_python -m pytest TICSC/utils/tests/  # Adjust the command as needed to run tests
