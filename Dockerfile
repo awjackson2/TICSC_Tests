@@ -51,11 +51,12 @@ ENV SIMNIBSDIR="/root/SimNIBS-4.1"
 
 # Install FSL
 RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py && \
-    python ./fslinstaller.py -d /usr/local/fsl/ || (cat /root/fsl_installation*.log && exit 1)
-
+    chmod +x fslinstaller.py && \
+    python fslinstaller.py -d /opt/fsl
 
 # Set environment variables for FSL
-ENV FSLDIR="/usr/local/fsl"
+ENV FSLDIR="/opt/fsl"
+ENV PATH="$FSLDIR/bin:$PATH"
 ENV LANG="en_GB.UTF-8"
 
 # Prepare directories for testing
