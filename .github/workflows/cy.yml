@@ -17,12 +17,25 @@ jobs:
     - name: Set up Docker
       run: |
         docker --version  # Confirm Docker is installed
+        df -h             # Check available disk space
+        free -m           # Check available memory
 
     - name: Build Docker Image
       run: |
-        docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "."  # Build the Docker image using your Dockerfile
+        docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "." || \
+        (echo "Docker build failed. Reviewing logs:" && exit 1)
 
-    - name: Run Tests Inside Docker
+    - name: Run Unit Tests Inside Docker
       run: |
-        docker run --rm ticsctests simnibs_python -m pytest ti-csc/utils/tests/unit  # Adjust the command as needed to run tests
-        docker run --rm ticsctests bash ti-csc/utils/tests/integration/test_analyzerIT.sh
+        docker run --rm ticsctests simnibs_python -m pytest ti-csc/utils/tests/unit || \
+        (echo "Unit tests failed. Reviewing logs:" && exit 1)
+
+    - name: Run Integration Tests Inside Docker
+      run: |
+        docker run --rm ticsctests bash ti-csc/utils/tests/integration/test_analyzerIT.sh || \
+        (echo "Integration tests failed. Reviewing logs:" && exit 1)
+
+    - name: Cleanup Docker
+      if: always()
+      run: |
+        docker system prune --all --force
