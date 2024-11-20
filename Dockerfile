@@ -81,6 +81,15 @@ RUN wget https://github.com/simnibs/simnibs/releases/download/v4.1.0/simnibs_ins
     && tar -xzf /simnibs/simnibs_installer_linux.tar.gz -C /simnibs \
     && /simnibs/simnibs_installer/install -s
 
+# Set MATLAB Runtime version and installation directory
+ENV MATLAB_RUNTIME_INSTALL_DIR=/usr/local/MATLAB/MATLAB_Runtime
+
+# Download and install MATLAB Runtime R2024a
+RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip -P /tmp \
+    && unzip -q /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip -d /tmp/matlab_runtime_installer \
+    && /tmp/matlab_runtime_installer/install -destinationFolder ${MATLAB_RUNTIME_INSTALL_DIR} -agreeToLicense yes -mode silent \
+    && rm -rf /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip /tmp/matlab_runtime_installer
+
 # Set environment variables for SimNIBS
 ENV PATH="/root/SimNIBS-4.1/bin:$PATH"
 ENV SIMNIBSDIR="/root/SimNIBS-4.1"
@@ -94,9 +103,9 @@ RUN mkdir -p mnt/testing_project_dir/utils
 RUN mkdir -p mnt/testing_project_dir/Subjects
 RUN mkdir -p mnt/testing_project_dir/Simulations
 
-COPY TICSC/utils/testing_data/utils/montage_list.json mnt/testing_project_dir/utils
-COPY TICSC/utils/testing_data/utils/roi_list.json mnt/testing_project_dir/utils
-COPY TICSC/utils/testing_data/utils/EGI_template.csv mnt/testing_project_dir/Subjects/m2m_ernie/eeg_positions/EGI_template.csv
+COPY ti-csc/utils/testing_data/utils/montage_list.json mnt/testing_project_dir/utils
+COPY ti-csc/utils/testing_data/utils/roi_list.json mnt/testing_project_dir/utils
+COPY ti-csc/utils/testing_data/utils/EGI_template.csv mnt/testing_project_dir/Subjects/m2m_ernie/eeg_positions/EGI_template.csv
 
 # Download the zip file with additional flags to handle failures better
 RUN curl -L https://github.com/simnibs/example-dataset/releases/latest/download/simnibs4_examples.zip -o mnt/testing_project_dir/Subjects/simnibs4_examples.zip || echo "Download failed"
@@ -104,12 +113,12 @@ RUN curl -L https://github.com/simnibs/example-dataset/releases/latest/download/
 # Optionally, you can unzip the file if needed
 RUN apt-get install -y unzip && unzip mnt/testing_project_dir/Subjects/simnibs4_examples.zip -d mnt/testing_project_dir/Subjects
 
-# Set PYTHONPATH to include TICSC
-ENV PYTHONPATH=/TICSC:$PYTHONPATH
+# Set PYTHONPATH to include ti-csc
+ENV PYTHONPATH=/ti-csc:$PYTHONPATH
 
 ENV PROJECT_DIR_NAME="testing_project_dir"
 
-RUN find /TICSC/analyzer -type f -name "*.sh" -exec dos2unix {} +
+RUN find /ti-csc/analyzer -type f -name "*.sh" -exec dos2unix {} +
 
 # Set the entrypoint to run pytest directly
 #CMD ["pytest", "Unit_Tests"]
