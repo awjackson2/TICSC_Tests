@@ -9,6 +9,13 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install necessary packages
 RUN apt-get update && apt-get install -y \
+    python \
+    file \
+    pulseaudio \
+    libquadmath0 \
+    libxft2 \
+    firefox \
+    libgomp1 \
     wget \
     git \
     unzip \
@@ -93,6 +100,16 @@ RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deplo
 # Set environment variables for SimNIBS
 ENV PATH="/root/SimNIBS-4.1/bin:$PATH"
 ENV SIMNIBSDIR="/root/SimNIBS-4.1"
+
+# Download and install FSL
+ENV FSLDIR="/usr/local/fsl"
+ENV DEBIAN_FRONTEND="noninteractive"
+ENV LANG="en_GB.UTF-8"
+
+RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py && \
+    python ./fslinstaller.py -d /usr/local/fsl/
+
+ENTRYPOINT [ "sh", "-c", ". /usr/local/fsl/etc/fslconf/fsl.sh && /bin/bash" ]
 
 # Copy the entire project into the container
 COPY . .
