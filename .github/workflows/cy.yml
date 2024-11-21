@@ -35,6 +35,17 @@ jobs:
         docker run --rm ticsctests bash ti-csc/utils/tests/integration/test_analyzerIT.sh || \
         (echo "Integration tests failed. Reviewing logs:" && exit 1)
 
+              # Debug Logs on Failure
+              
+    - name: Debug Failed Build
+      if: failure()
+      run: |
+        echo "Displaying FSL log if available..."
+        docker create --name fsl-debug-container fsl-debug
+        docker cp fsl-debug-container:/root/fsl_installation_*.log ./fsl_installation.log || echo "No log file found."
+        cat ./fsl_installation.log || echo "Failed to display log."
+        docker rm fsl-debug-container
+
     - name: Cleanup Docker
       if: always()
       run: |
