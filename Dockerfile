@@ -11,30 +11,88 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
     python \
     file \
+    pulseaudio \
+    libquadmath0 \
+    libxft2 \
+    firefox \
+    libgomp1 \
     wget \
     git \
     unzip \
     python3-pip \
+    libglib2.0-0 \
+    libssl1.1 \
+    libopenblas-dev \
     build-essential \
+    tar \
+    bzip2 \
     gcc \
     g++ \
+    cmake \
+    libtool \
+    libtool-bin \
+    autoconf \
+    automake \
+    pkg-config \
+    gettext \
     curl \
+    ninja-build \
+    python3.8-venv \
+    python3.8-dev \
+    libgl1-mesa-glx \
+    libglu1-mesa \
+    mesa-utils \
+    libgl1-mesa-dri \
+    libglapi-mesa \
+    libosmesa6 \
+    libxt6 \
+    libxext6 \
+    libxrender1 \
+    libxrandr2 \
+    libxfixes3 \
+    libxcursor1 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxi6 \
+    libqt5widgets5 \
+    libqt5gui5 \
+    libqt5core5a \
+    libqt5svg5 \
+    libqt5opengl5 \
+    libgtk2.0-0 \
+    libreoffice \
+    nodejs \
+    npm \
+    jq \
+    bc \
+    dc \
     vim \
     tmux \
+    tcsh \
+    tree \
+    locales \
+    fontconfig \
+    execstack \
+    imagemagick \
     dos2unix \
     libgl1-mesa-glx \
     libxt6 \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+#Make the ti-csc directory in docker
+RUN mkdir /ti-csc
+
+# Copy ti-csc
+COPY ../ti-csc ti-csc
 
 # Install Python packages
 COPY requirements.txt .
 RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 
 # Install SimNIBS
-RUN mkdir -p /simnibs && chmod -R 777 /simnibs
-RUN wget https://github.com/simnibs/simnibs/releases/download/v4.1.0/simnibs_installer_linux.tar.gz -P /simnibs && \
-    tar -xzf /simnibs/simnibs_installer_linux.tar.gz -C /simnibs && \
-    /simnibs/simnibs_installer/install -s
+RUN wget https://github.com/simnibs/simnibs/releases/download/v4.1.0/simnibs_installer_linux.tar.gz -P /simnibs \
+    && tar -xzf /simnibs/simnibs_installer_linux.tar.gz -C /simnibs \
+    && /simnibs/simnibs_installer/install -s
 
 # Set MATLAB Runtime version and installation directory
 ENV MATLAB_RUNTIME_INSTALL_DIR=/usr/local/MATLAB/MATLAB_Runtime
