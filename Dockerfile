@@ -80,7 +80,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Create a virtual environment in the Docker image
-RUN python3 -m venv /app/.venv && 
+RUN python3 -m venv /app/.venv
 
 # Set the PATH to use the virtual environment
 ENV PATH="/app/.venv/bin:$PATH"
