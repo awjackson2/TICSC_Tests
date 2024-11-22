@@ -113,23 +113,23 @@ RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deplo
 ENV PATH="/root/SimNIBS-4.1/bin:$PATH"
 ENV SIMNIBSDIR="/root/SimNIBS-4.1"
 
-# Install Miniconda
+# Install Miniconda (if Conda is not already installed)
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
     bash /tmp/miniconda.sh -b -p /opt/conda && \
     rm /tmp/miniconda.sh && \
     /opt/conda/bin/conda init
-    
+
+# Ensure Conda is available in PATH
 ENV PATH="/opt/conda/bin:$PATH"
 
-# Install FSL
-RUN  wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py || \
-(echo "Installation failed. Log file contents:" && cat /root/fsl_installation_*.log && exit 1)
-RUN  python ./fslinstaller.py -d /usr/local/fsl/
+# Create a Conda environment and install FSL
+RUN conda create -n fsl-env fsl && \
+    conda activate fsl-env && \
+    conda install -c conda-forge fsl
 
-# Set environment variables for FSL
-ENV FSLDIR="/opt/fsl"
+# Set FSL environment variables
+ENV FSLDIR=/opt/conda/envs/fsl-env
 ENV PATH="$FSLDIR/bin:$PATH"
-ENV LANG="en_GB.UTF-8"
 
 # Prepare directories for testing
 RUN mkdir -p /mnt/testing_project_dir/{utils,Subjects,Simulations}
