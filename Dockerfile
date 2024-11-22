@@ -81,8 +81,7 @@ RUN apt-get update && apt-get install -y \
 
 # Create a virtual environment in the Docker image
 RUN python3 -m venv /app/.venv && \
-    /app/.venv/bin/pip install --upgrade pip && \
-    /app/.venv/bin/pip install -r requirements.txt
+    /app/.venv/bin/pip install --upgrade pip && 
 
 # Set the PATH to use the virtual environment
 ENV PATH="/app/.venv/bin:$PATH"
