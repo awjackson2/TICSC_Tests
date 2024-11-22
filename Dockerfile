@@ -11,7 +11,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
     python \
     file \
-    pulseaudio \
     libquadmath0 \
     libxft2 \
     firefox \
@@ -79,21 +78,11 @@ RUN apt-get update && apt-get install -y \
     libxt6 \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Create a virtual environment in the Docker image
-RUN python3 -m venv /app/.venv
-
-# Set the PATH to use the virtual environment
-ENV PATH="/app/.venv/bin:$PATH"
-
 #Make the ti-csc directory in docker
 RUN mkdir /ti-csc
 
 # Copy ti-csc
 COPY ../ti-csc ti-csc
-
-# Install Python packages
-COPY requirements.txt .
-RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 
 # Install SimNIBS
 RUN wget https://github.com/simnibs/simnibs/releases/download/v4.1.0/simnibs_installer_linux.tar.gz -P /simnibs \
