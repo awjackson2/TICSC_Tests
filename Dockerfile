@@ -107,18 +107,21 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -
     bash /tmp/miniconda.sh -b -p /opt/conda && \
     rm /tmp/miniconda.sh && \
     /opt/conda/bin/conda init
-
-# Ensure Conda is available in PATH
 ENV PATH="/opt/conda/bin:$PATH"
 
-# Create a Conda environment and install FSL
-RUN conda create -n fsl-env fsl && \
-    conda activate fsl-env && \
-    conda install -c conda-forge fsl
+# Install FSL with Conda
+RUN conda create -y \
+    -c https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/public/ \
+    -c conda-forge \
+    -n fsl-env fsl-avwutils
 
-# Set FSL environment variables
-ENV FSLDIR=/opt/conda/envs/fsl-env
-ENV PATH="$FSLDIR/bin:$PATH"
+# Configure Conda environment and FSL
+RUN echo "source activate fsl-env" >> ~/.bashrc && \
+    echo "export FSLDIR=$CONDA_PREFIX" >> ~/.bashrc && \
+    echo "source $FSLDIR/etc/fslconf/fsl.sh" >> ~/.bashrc
+
+# Make sure Conda is activated for any subsequent shell sessions
+ENV PATH="/opt/conda/envs/fsl-env/bin:$PATH"
 
 # Prepare directories for testing
 RUN mkdir -p /mnt/testing_project_dir/{utils,Subjects,Simulations}
