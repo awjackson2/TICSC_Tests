@@ -33,9 +33,10 @@ jobs:
     - name: Run Integration Tests Inside Docker
       run: |
         docker run --rm ticsctests bash -c "\
-        chmod +x ti-csc/utils/tests/integration/test_analyzerIT.sh && \
-        ti-csc/utils/tests/integration/test_analyzerIT.sh || \
-        (echo 'Integration tests failed. Reviewing logs:' && exit 1)"
+          chmod +x /ti-csc/utils/tests/integration/test_analyzerIT.sh && \
+          chmod +x /ti-csc/analyzer/field-analysis/process_mesh_files && \
+          /ti-csc/utils/tests/integration/test_analyzerIT.sh || \
+          (echo 'Integration tests failed. Reviewing logs:' && exit 1)"
       
     - name: Cleanup Docker
       if: always()
