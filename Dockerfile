@@ -79,6 +79,14 @@ RUN apt-get update && apt-get install -y \
     libxt6 \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Create a virtual environment in the Docker image
+RUN python3 -m venv /app/.venv && \
+    /app/.venv/bin/pip install --upgrade pip && \
+    /app/.venv/bin/pip install -r requirements.txt
+
+# Set the PATH to use the virtual environment
+ENV PATH="/app/.venv/bin:$PATH"
+
 #Make the ti-csc directory in docker
 RUN mkdir /ti-csc
 

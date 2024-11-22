@@ -27,15 +27,13 @@ jobs:
 
     - name: Run Unit Tests Inside Docker
       run: |
-        docker run --rm ticsctests simnibs_python -m pytest ti-csc/utils/tests/unit || \
+        docker run --rm ticsctests bash -c "source /app/.venv/bin/activate && simnibs_python -m pytest ti-csc/utils/tests/unit" || \
         (echo "Unit tests failed. Reviewing logs:" && exit 1)
 
     - name: Run Integration Tests Inside Docker
       run: |
-        docker run --rm ticsctests bash ti-csc/utils/tests/integration/test_analyzerIT.sh || \
+        docker run --rm ticsctests bash -c "source /app/.venv/bin/activate && bash ti-csc/utils/tests/integration/test_analyzerIT.sh" || \
         (echo "Integration tests failed. Reviewing logs:" && exit 1)
-
-              # Debug Logs on Failure
 
     - name: Cleanup Docker
       if: always()
