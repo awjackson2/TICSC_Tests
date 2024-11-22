@@ -117,14 +117,14 @@ RUN conda create -y \
 
 # Configure Conda environment and FSL
 RUN echo "source activate fsl-env" >> ~/.bashrc && \
-    echo "export FSLDIR=$CONDA_PREFIX" >> ~/.bashrc && \
-    echo "source $FSLDIR/etc/fslconf/fsl.sh" >> ~/.bashrc
+    echo 'export FSLDIR="/opt/conda/envs/fsl-env"' >> ~/.bashrc && \
+    echo "source /opt/conda/envs/fsl-env/etc/fslconf/fsl.sh" >> ~/.bashrc
 
 # Make sure Conda is activated for any subsequent shell sessions
 ENV PATH="/opt/conda/envs/fsl-env/bin:$PATH"
 
 # Prepare directories for testing
-RUN mkdir -p /mnt/testing_project_dir/{utils,Subjects,Simulations}
+RUN mkdir -p /mnt/testing_project_dir/utils /mnt/testing_project_dir/Subjects /mnt/testing_project_dir/Simulations
 COPY ti-csc/utils/testing_data/utils/montage_list.json /mnt/testing_project_dir/utils
 COPY ti-csc/utils/testing_data/utils/roi_list.json /mnt/testing_project_dir/utils
 COPY ti-csc/utils/testing_data/utils/EGI_template.csv /mnt/testing_project_dir/Subjects/m2m_ernie/eeg_positions/
