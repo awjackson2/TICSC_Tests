@@ -113,6 +113,14 @@ RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deplo
 ENV PATH="/root/SimNIBS-4.1/bin:$PATH"
 ENV SIMNIBSDIR="/root/SimNIBS-4.1"
 
+# Install Miniconda
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
+    bash /tmp/miniconda.sh -b -p /opt/conda && \
+    rm /tmp/miniconda.sh && \
+    /opt/conda/bin/conda init
+    
+ENV PATH="/opt/conda/bin:$PATH"
+
 # Install FSL
 RUN  wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py || \
 (echo "Installation failed. Log file contents:" && cat /root/fsl_installation_*.log && exit 1)
