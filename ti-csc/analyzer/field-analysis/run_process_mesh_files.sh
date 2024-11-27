@@ -2,10 +2,10 @@
 # Function to find MATLAB Runtime
 find_matlab_runtime() {
     local potential_paths=(
-        "/usr/local/MATLAB/MATLAB_Runtime/R2024b"
+        "/usr/local/MATLAB/MATLAB_Runtime/R2024a"
         "/usr/local/MATLAB/MATLAB_Runtime/v951"
-        "/opt/MATLAB/MATLAB_Runtime/R2024b"
-        "/home/$USER/MATLAB_Runtime/R2024b"
+        "/opt/MATLAB/MATLAB_Runtime/R2024a"
+        "/home/$USER/MATLAB_Runtime/R2024a"
     )
 
     for path in "${potential_paths[@]}"; do
@@ -37,7 +37,7 @@ echo "LD_LIBRARY_PATH is ${LD_LIBRARY_PATH}"
 echo "--------------------------------------"
 
 # Create a symlink if the exact version of the library is missing
-if [ ! -f "${MCROOT}/runtime/glnxa64/libmwmclmcrrt.so.25.1" ]; then
+if [ ! -f "${MCROOT}/runtime/glnxa64/libmwmclmcrrt.so.24.1" ]; then
     echo "libmwmclmcrrt.so.25.1 not found. Attempting to create a symlink to libmwmclmcrrt.so.24.1"
     ln -s ${MCROOT}/runtime/glnxa64/libmwmclmcrrt.so.24.1 ${MCROOT}/runtime/glnxa64/libmwmclmcrrt.so.25.1
 fi
