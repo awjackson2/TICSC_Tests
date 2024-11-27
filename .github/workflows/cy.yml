@@ -27,15 +27,39 @@ jobs:
       run: |
         # Run the container interactively for debugging
         docker run --rm -d --name ticsctests_debug ticsctests:latest sleep 30
-        # Check if the MATLAB Runtime directory exists
-        echo "Checking MATLAB Runtime directory:"
-        docker exec ticsctests_debug ls -l /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64
-        # Search for the specific runtime library file
+
+        # Function to check if a directory or file exists
+        check_path() {
+          echo "Checking path: $1"
+          docker exec ticsctests_debug ls -ld "$1" 2>/dev/null || echo "Path $1 does not exist or is inaccessible."
+        }
+
+        # Check each directory incrementally
+        echo "Checking /usr:"
+        check_path /usr
+
+        echo "Checking /usr/local:"
+        check_path /usr/local
+
+        echo "Checking /usr/local/MATLAB:"
+        check_path /usr/local/MATLAB
+
+        echo "Checking /usr/local/MATLAB/MATLAB_Runtime:"
+        check_path /usr/local/MATLAB/MATLAB_Runtime
+
+        echo "Checking /usr/local/MATLAB/MATLAB_Runtime/R2024a:"
+        check_path /usr/local/MATLAB/MATLAB_Runtime/R2024a
+
+        echo "Checking /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime:"
+        check_path /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime
+
+        echo "Checking /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64:"
+        check_path /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64
+
+        # Finally, check for the specific runtime library file
         echo "Searching for libmwmclmcrrt.so.24.1:"
-        docker exec ticsctests_debug find /usr/local/MATLAB/MATLAB_Runtime -name "libmwmclmcrrt.so.24.1" 2>/dev/null || echo "Runtime library not found."
-        # Check if MATLAB Runtime is correctly set in the environment
-        echo "Printing environment variables to verify MATLAB_RUNTIME_INSTALL_DIR:"
-        docker exec ticsctests_debug env | grep MATLAB_RUNTIME_INSTALL_DIR
+        docker exec ticsctests_debug find /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64 -name "libmwmclmcrrt.so.24.1" 2>/dev/null || echo "libmwmclmcrrt.so.24.1 not found."
+
         # Clean up the Docker container
         docker rm -f ticsctests_debug
   
