@@ -2,10 +2,10 @@
 # Function to find MATLAB Runtime
 find_matlab_runtime() {
     local potential_paths=(
-        "/usr/local/MATLAB/MATLAB_Runtime/R2024a"
+        "/usr/local/MATLAB/MATLAB_Runtime/R2024b"
         "/usr/local/MATLAB/MATLAB_Runtime/v951"
-        "/opt/MATLAB/MATLAB_Runtime/R2024a"
-        "/home/$USER/MATLAB_Runtime/R2024a"
+        "/opt/MATLAB/MATLAB_Runtime/R2024b"
+        "/home/$USER/MATLAB_Runtime/R2024b"
     )
 
     for path in "${potential_paths[@]}"; do
