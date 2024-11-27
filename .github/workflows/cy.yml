@@ -33,7 +33,6 @@ jobs:
     - name: Run Integration Tests Inside Docker
       run: |
         docker run --rm ticsctests bash -c "\
-          ln -s /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.24.1 /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.25.1 && \
           chmod +x /ti-csc/analyzer/field-analysis/process_mesh_files && \
           /ti-csc/utils/tests/integration/test_analyzerIT.sh || \
           (echo 'Integration tests failed. Reviewing logs:' && exit 1)"
