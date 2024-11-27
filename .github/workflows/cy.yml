@@ -23,28 +23,26 @@ jobs:
         docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "." || \
         (echo "Docker build failed. Reviewing logs:" && exit 1)
 
-
-    - name: List Top-Level Directories
+    - name: Run Docker Container and Debug
       run: |
+        # Run the container interactively for debugging
+        docker run --rm -d --name ticsctests_debug ticsctests:latest sleep 30
+        # Print top-level directories inside the container
         echo "Top-level directories:"
-        ls -1 /
-  
-    - name: Print Detailed Directory Structure
-      run: |
+        docker exec ticsctests_debug ls -1 /
+        # Print detailed directory structure for /usr/local inside the container
         echo "Printing directory structure for /usr/local:"
-        ls -R /usr/local
-
-    - name: Search for MATLAB Runtime
-      run: |
+        docker exec ticsctests_debug ls -R /usr/local
+        # Search for MATLAB Runtime inside the container
         echo "Searching for MATLAB Runtime in /usr/local/MATLAB:"
-        find /usr/local/MATLAB -type d
+        docker exec ticsctests_debug find /usr/local/MATLAB -type d
         echo "Searching for runtime libraries in /usr/local/MATLAB:"
-        find /usr/local/MATLAB -name "libmwmclmcrrt.so*" 2>/dev/null || echo "No runtime libraries found."
-
-    - name: Print Environment Variables
-      run: |
+        docker exec ticsctests_debug find /usr/local/MATLAB -name "libmwmclmcrrt.so*" 2>/dev/null || echo "No runtime libraries found."
+        # Print environment variables inside the container
         echo "Environment variables:"
-        env
+        docker exec ticsctests_debug env
+        # Clean up the Docker container
+        docker rm -f ticsctests_debug
 
     - name: Run Unit Tests Inside Docker
       run: |
@@ -57,7 +55,7 @@ jobs:
           chmod +x /ti-csc/utils/tests/integration/test_analyzerIT.sh && \
           /ti-csc/utils/tests/integration/test_analyzerIT.sh || \
           (echo 'Integration tests failed. Reviewing logs:' && exit 1)"
-      
+
     - name: Cleanup Docker
       if: always()
       run: |
