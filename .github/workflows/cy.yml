@@ -23,23 +23,28 @@ jobs:
         docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "." || \
         (echo "Docker build failed. Reviewing logs:" && exit 1)
 
-    - name: Debug MATLAB Runtime Location
+
+        - name: List Top-Level Directories
+        run: |
+          echo "Top-level directories:"
+          ls -1 /
+  
+    - name: Print Detailed Directory Structure
       run: |
-        echo "Searching for MATLAB Runtime..."
-        COMMON_PATHS=(
-          "/usr/local/MATLAB"
-          "/opt/MATLAB"
-          "/usr/local/MATLAB_Runtime"
-          "/opt/MATLAB_Runtime"
-        )
-        for path in "${COMMON_PATHS[@]}"; do
-          if [ -d "$path" ]; then
-            echo "Found MATLAB installation at: $path"
-            find "$path" -name "libmwmclmcrrt.so*" 2>/dev/null || echo "No runtime libraries found in $path"
-          else
-            echo "Directory $path does not exist."
-          fi
-        done
+        echo "Printing directory structure for /usr/local:"
+        ls -R /usr/local
+
+    - name: Search for MATLAB Runtime
+      run: |
+        echo "Searching for MATLAB Runtime in /usr/local/MATLAB:"
+        find /usr/local/MATLAB -type d
+        echo "Searching for runtime libraries in /usr/local/MATLAB:"
+        find /usr/local/MATLAB -name "libmwmclmcrrt.so*" 2>/dev/null || echo "No runtime libraries found."
+
+    - name: Print Environment Variables
+      run: |
+        echo "Environment variables:"
+        env
 
     - name: Run Unit Tests Inside Docker
       run: |
