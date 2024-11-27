@@ -98,6 +98,7 @@ RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deplo
     && /tmp/matlab_runtime_installer/install -destinationFolder ${MATLAB_RUNTIME_INSTALL_DIR} -agreeToLicense yes -mode silent \
     && rm -rf /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip /tmp/matlab_runtime_installer
 
+    #COMMENT
 # Additional steps to run execstack on process_mesh_files in specific field-analysis directories
 RUN execstack -s /ti-csc/analyzer/field-analysis/process_mesh_files \
     && execstack -s /ti-csc/optimizer/field-analysis/process_mesh_files

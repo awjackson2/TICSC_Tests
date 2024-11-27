@@ -23,6 +23,24 @@ jobs:
         docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "." || \
         (echo "Docker build failed. Reviewing logs:" && exit 1)
 
+    - name: Debug MATLAB Runtime Location
+      run: |
+        echo "Searching for MATLAB Runtime..."
+        COMMON_PATHS=(
+          "/usr/local/MATLAB"
+          "/opt/MATLAB"
+          "/usr/local/MATLAB_Runtime"
+          "/opt/MATLAB_Runtime"
+        )
+        for path in "${COMMON_PATHS[@]}"; do
+          if [ -d "$path" ]; then
+            echo "Found MATLAB installation at: $path"
+            find "$path" -name "libmwmclmcrrt.so*" 2>/dev/null || echo "No runtime libraries found in $path"
+          else
+            echo "Directory $path does not exist."
+          fi
+        done
+
     - name: Run Unit Tests Inside Docker
       run: |
         docker run --rm ticsctests bash -c "simnibs_python -m pytest ti-csc/utils/tests/unit" || \
