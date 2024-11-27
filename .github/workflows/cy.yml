@@ -24,10 +24,10 @@ jobs:
         (echo "Docker build failed. Reviewing logs:" && exit 1)
 
 
-        - name: List Top-Level Directories
-        run: |
-          echo "Top-level directories:"
-          ls -1 /
+    - name: List Top-Level Directories
+      run: |
+        echo "Top-level directories:"
+        ls -1 /
   
     - name: Print Detailed Directory Structure
       run: |
