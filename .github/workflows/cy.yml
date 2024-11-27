@@ -27,23 +27,18 @@ jobs:
       run: |
         # Run the container interactively for debugging
         docker run --rm -d --name ticsctests_debug ticsctests:latest sleep 30
-        # Print top-level directories inside the container
-        echo "Top-level directories:"
-        docker exec ticsctests_debug ls -1 /
-        # Print detailed directory structure for /usr/local inside the container
-        echo "Printing directory structure for /usr/local:"
-        docker exec ticsctests_debug ls -R /usr/local
-        # Search for MATLAB Runtime inside the container
-        echo "Searching for MATLAB Runtime in /usr/local/MATLAB:"
-        docker exec ticsctests_debug find /usr/local/MATLAB -type d
-        echo "Searching for runtime libraries in /usr/local/MATLAB:"
-        docker exec ticsctests_debug find /usr/local/MATLAB -name "libmwmclmcrrt.so*" 2>/dev/null || echo "No runtime libraries found."
-        # Print environment variables inside the container
-        echo "Environment variables:"
-        docker exec ticsctests_debug env
+        # Check if the MATLAB Runtime directory exists
+        echo "Checking MATLAB Runtime directory:"
+        docker exec ticsctests_debug ls -l /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64
+        # Search for the specific runtime library file
+        echo "Searching for libmwmclmcrrt.so.24.1:"
+        docker exec ticsctests_debug find /usr/local/MATLAB/MATLAB_Runtime -name "libmwmclmcrrt.so.24.1" 2>/dev/null || echo "Runtime library not found."
+        # Check if MATLAB Runtime is correctly set in the environment
+        echo "Printing environment variables to verify MATLAB_RUNTIME_INSTALL_DIR:"
+        docker exec ticsctests_debug env | grep MATLAB_RUNTIME_INSTALL_DIR
         # Clean up the Docker container
         docker rm -f ticsctests_debug
-
+  
     - name: Run Unit Tests Inside Docker
       run: |
         docker run --rm ticsctests bash -c "simnibs_python -m pytest ti-csc/utils/tests/unit" || \
