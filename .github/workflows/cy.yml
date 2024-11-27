@@ -1,8 +1,6 @@
-name: CI Pipeline with Docker
+name: Validate Features Branch
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
