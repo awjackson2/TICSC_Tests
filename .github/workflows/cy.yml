@@ -23,10 +23,12 @@ jobs:
         docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "." || \
         (echo "Docker build failed. Reviewing logs:" && exit 1)
 
-    - name: Run Docker Image Interactivly
-      run: |
-        docker run -it ticsctests:latest
-        
+    - name: Verify MATLAB Runtime Installation
+      run: docker run --rm ticsctests bash -c "ls -R /usr/local/MATLAB/MATLAB_Runtime"
+          && /tmp/matlab_runtime_installer/install ... > /tmp/matlab_runtime_install.log 2>&1 \
+          && cat /tmp/matlab_runtime_install.log
+
+
     - name: Run Docker Container and Debug
       run: |
 
