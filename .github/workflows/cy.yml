@@ -23,9 +23,13 @@ jobs:
         docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "." || \
         (echo "Docker build failed. Reviewing logs:" && exit 1)
 
+    - name: Run Docker Image Interactivly
+      run: |
+        docker run -it ticsctests:latest
+        
     - name: Run Docker Container and Debug
       run: |
-      
+
         # Run the container interactively for debugging
         docker run --rm -d --name ticsctests_debug ticsctests:latest sleep 30
 
