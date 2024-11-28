@@ -94,9 +94,15 @@ ENV MATLAB_RUNTIME_INSTALL_DIR=/usr/local/MATLAB/MATLAB_Runtime
 
 # Download and install MATLAB Runtime R2024a
 RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip -P /tmp \
+    && echo "MATLAB Runtime ZIP file details:" && ls -lh /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip \
     && unzip -q /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip -d /tmp/matlab_runtime_installer \
-    && /tmp/matlab_runtime_installer/install -destinationFolder ${MATLAB_RUNTIME_INSTALL_DIR} -agreeToLicense yes -mode silent \
+    && echo "MATLAB Runtime installer contents:" && ls -lh /tmp/matlab_runtime_installer \
+    && /tmp/matlab_runtime_installer/install -destinationFolder ${MATLAB_RUNTIME_INSTALL_DIR} -agreeToLicense yes -mode silent > /tmp/matlab_runtime_install.log 2>&1 \
+    && echo "MATLAB Runtime installation log:" && cat /tmp/matlab_runtime_install.log \
+    && echo "Verifying MATLAB Runtime installation directory structure:" \
+    && ls -R ${MATLAB_RUNTIME_INSTALL_DIR} || echo "MATLAB Runtime directory not found at ${MATLAB_RUNTIME_INSTALL_DIR}" \
     && rm -rf /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip /tmp/matlab_runtime_installer
+
 
     #COMMENT
 # Additional steps to run execstack on process_mesh_files in specific field-analysis directories
