@@ -89,6 +89,11 @@ RUN wget https://github.com/simnibs/simnibs/releases/download/v4.1.0/simnibs_ins
     && tar -xzf /simnibs/simnibs_installer_linux.tar.gz -C /simnibs \
     && /simnibs/simnibs_installer/install -s
 
+# Install Bats
+RUN git clone https://github.com/bats-core/bats-core.git /tmp/bats \
+    && /tmp/bats/install.sh /usr/local \
+    && rm -rf /tmp/bats
+
 # Set MATLAB Runtime version and installation directory
 RUN mkdir /usr/local/MATLAB
 RUN mkdir /usr/local/MATLAB/MATLAB_Runtime
