@@ -22,54 +22,7 @@ jobs:
       run: |
         docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "." || \
         (echo "Docker build failed. Reviewing logs:" && exit 1)
-
-    - name: Verify MATLAB Runtime Installation
-      run: docker run --rm ticsctests bash -c "ls -R /usr/local/MATLAB/MATLAB_Runtime"
-          && /tmp/matlab_runtime_installer/install ... > /tmp/matlab_runtime_install.log 2>&1 \
-          && cat /tmp/matlab_runtime_install.log
-
-
-    - name: Run Docker Container and Debug
-      run: |
-
-        # Run the container interactively for debugging
-        docker run --rm -d --name ticsctests_debug ticsctests:latest sleep 30
-
-        # Function to check if a directory or file exists
-        check_path() {
-          echo "Checking path: $1"
-          docker exec ticsctests_debug ls -ld "$1" 2>/dev/null || echo "Path $1 does not exist or is inaccessible."
-        }
-
-        # Check each directory incrementally
-        echo "Checking /usr:"
-        check_path /usr
-
-        echo "Checking /usr/local:"
-        check_path /usr/local
-
-        echo "Checking /usr/local/MATLAB:"
-        check_path /usr/local/MATLAB
-
-        echo "Checking /usr/local/MATLAB/MATLAB_Runtime:"
-        check_path /usr/local/MATLAB/MATLAB_Runtime
-
-        echo "Checking /usr/local/MATLAB/MATLAB_Runtime/R2024a:"
-        check_path /usr/local/MATLAB/MATLAB_Runtime/R2024a
-
-        echo "Checking /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime:"
-        check_path /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime
-
-        echo "Checking /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64:"
-        check_path /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64
-
-        # Finally, check for the specific runtime library file
-        echo "Searching for libmwmclmcrrt.so.24.1:"
-        docker exec ticsctests_debug find /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64 -name "libmwmclmcrrt.so.24.1" 2>/dev/null || echo "libmwmclmcrrt.so.24.1 not found."
-
-        # Clean up the Docker container
-        docker rm -f ticsctests_debug
-  
+        
     - name: Run Unit Tests Inside Docker
       run: |
         docker run --rm ticsctests bash -c "simnibs_python -m pytest ti-csc/utils/tests/unit" || \
