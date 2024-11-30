@@ -7,6 +7,11 @@ function setup() {
         dos2unix $script
 }
 
+@test "Example Test" {
+        run echo "hello"
+        [ "$status" -eq 1]
+}
+
 @test "Test Non-Exisiting Montage File" {
         export PROJECT_DIR_NAME="/tmp/mock_project_dir" # Change the project directory to a mocked project that does not contain a montage file
         # mkdir /tmp/mock_project_dir # Create a mock project folder
