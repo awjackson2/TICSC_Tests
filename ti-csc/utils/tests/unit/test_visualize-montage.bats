@@ -9,8 +9,8 @@ function setup() {
 }
 
 @test "Example Test" {
-    run echo "hello"
-    [ "$status" -eq 0 ]
+        run echo hello
+        [ "$output" == hello ]
 }
 
 @test "Test Non-Exisiting Montage File" {
