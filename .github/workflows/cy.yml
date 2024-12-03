@@ -40,7 +40,6 @@ jobs:
               chmod +x /ti-csc/utils/tests/integration/test_analyzerIT.sh && \
               /ti-csc/utils/tests/integration/test_analyzerIT.sh || \
               (echo 'Integration tests failed. Reviewing logs:' && exit 1)"
-      )"
 
     - name: Cleanup Docker
       if: always()  # Ensures cleanup happens even if prior steps fail
