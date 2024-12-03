@@ -156,9 +156,5 @@ ENV PROJECT_DIR_NAME="testing_project_dir"
 # Fix line endings for shell scripts
 RUN [ -d /ti-csc/analyzer ] && find /ti-csc/analyzer -type f -name "*.sh" -exec dos2unix {} + || echo "/ti-csc/analyzer does not exist"
 
-RUN chown -R root:root /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64 && \
-    chmod -R 755 /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64 && \
-    ln -s /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.24.1 /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.25.1
-
 # Default command to run pytest for testing
 # CMD ["pytest", "--maxfail=3", "--disable-warnings", "/ti-csc/tests"]
