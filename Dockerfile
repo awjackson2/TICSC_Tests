@@ -84,6 +84,13 @@ RUN mkdir /ti-csc
 # Copy ti-csc
 COPY ../ti-csc ti-csc
 
+# Make sure the scripts are executable after they are copied
+RUN chmod -R +x /ti-csc/analyzer/field-analysis/
+
+# Additional steps to run execstack on process_mesh_files in specific field-analysis directories
+RUN execstack -s /ti-csc/analyzer/field-analysis/process_mesh_files \
+    && execstack -s /ti-csc/optimizer/field-analysis/process_mesh_files
+
 # Install SimNIBS
 RUN wget https://github.com/simnibs/simnibs/releases/download/v4.1.0/simnibs_installer_linux.tar.gz -P /simnibs \
     && tar -xzf /simnibs/simnibs_installer_linux.tar.gz -C /simnibs \
@@ -109,10 +116,6 @@ RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deplo
     && echo "Verifying MATLAB Runtime installation directory structure:" \
     && ls -R /usr/local/MATLAB/MATLAB_Runtime || echo "MATLAB Runtime directory not found at /usr/local/MATLAB/MATLAB_Runtime" \
     && rm -rf /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip /tmp/matlab_runtime_installer
-
-# Additional steps to run execstack on process_mesh_files in specific field-analysis directories
-RUN execstack -s /ti-csc/analyzer/field-analysis/process_mesh_files \
-    && execstack -s /ti-csc/optimizer/field-analysis/process_mesh_files
 
 # Set environment variables for SimNIBS
 ENV PATH="/root/SimNIBS-4.1/bin:$PATH"
@@ -156,5 +159,5 @@ ENV PROJECT_DIR_NAME="testing_project_dir"
 # Fix line endings for shell scripts
 RUN [ -d /ti-csc/analyzer ] && find /ti-csc/analyzer -type f -name "*.sh" -exec dos2unix {} + || echo "/ti-csc/analyzer does not exist"
 
-# Default command to run pytest for testing
-# CMD ["pytest", "--maxfail=3", "--disable-warnings", "/ti-csc/tests"]
+
+
