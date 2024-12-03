@@ -114,9 +114,6 @@ RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deplo
 RUN execstack -s /ti-csc/analyzer/field-analysis/process_mesh_files \
     && execstack -s /ti-csc/optimizer/field-analysis/process_mesh_files
 
-# Add a symlink from fake newer version of libssl to the required version
-RUN ln -s /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.24.1 /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.25.1
-
 # Set environment variables for SimNIBS
 ENV PATH="/root/SimNIBS-4.1/bin:$PATH"
 ENV SIMNIBSDIR="/root/SimNIBS-4.1"
@@ -158,6 +155,9 @@ ENV PROJECT_DIR_NAME="testing_project_dir"
 
 # Fix line endings for shell scripts
 RUN [ -d /ti-csc/analyzer ] && find /ti-csc/analyzer -type f -name "*.sh" -exec dos2unix {} + || echo "/ti-csc/analyzer does not exist"
+
+# Add a symlink from fake newer version of libssl to the required version
+RUN ln -s /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.24.1 /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.25.1
 
 # Default command to run pytest for testing
 # CMD ["pytest", "--maxfail=3", "--disable-warnings", "/ti-csc/tests"]
