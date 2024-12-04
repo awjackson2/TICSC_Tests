@@ -104,7 +104,7 @@ RUN git clone https://github.com/bats-core/bats-core.git /tmp/bats \
 # Set MATLAB Runtime version and installation directory
 RUN mkdir /usr/local/MATLAB
 RUN mkdir /usr/local/MATLAB/MATLAB_Runtime
-ENV MATLAB_RUNTIME_INSTALL_DIR=/opt/conda/envs/fsl-env/lib:/usr/local/MATLAB/MATLAB_Runtime
+ENV MATLAB_RUNTIME_INSTALL_DIR=/usr/local/MATLAB/MATLAB_Runtime
 ENV LD_LIBRARY_PATH="${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/runtime/glnxa64/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/runtime/glnxa64/lib/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/bin/glnxa64/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/sys/os/glnxa64/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/sys/java/jre/glnxa64/jre/lib/amd64:$LD_LIBRARY_PATH"
 
 # Download and install MATLAB Runtime R2024a

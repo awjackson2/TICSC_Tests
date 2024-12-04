@@ -1,9 +1,17 @@
 #!/bin/bash
 # Exit immediately if a command exits with a non-zero status
-
 set -e
 
-export LD_LIBRARY_PATH="${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/runtime/glnxa64/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/runtime/glnxa64/lib/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/bin/glnxa64/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/sys/os/glnxa64/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/sys/java/jre/glnxa64/jre/lib/amd64:$LD_LIBRARY_PATH"
+# Source Conda setup script
+if [ -f "/opt/conda/etc/profile.d/conda.sh" ]; then
+    source /opt/conda/etc/profile.d/conda.sh
+else
+    echo "Error: Conda setup script not found. Ensure Conda is installed correctly."
+    exit 1
+fi
+
+# Activate the Conda environment
+conda activate fsl-env || { echo "Error: Failed to activate Conda environment 'fsl-env'"; exit 1; }
 
 # Navigate to the required directory
 cd /ti-csc/analyzer || { echo "Directory /ti-csc/analyzer does not exist"; exit 1; }
@@ -22,7 +30,6 @@ EXPECTED_DIR="/mnt/testing_project_dir/Simulations/sim_ernie"
 
 # Define the expected files
 EXPECTED_FILES=(
-    # FEM files - TI_Little_Pairs
     "FEM/TI_Little_Pairs/TI.msh.opt"
     "FEM/TI_Little_Pairs/ernie_TDCS_1_el_currents.geo"
     "FEM/TI_Little_Pairs/ernie_TDCS_1_scalar.msh"
@@ -31,21 +38,16 @@ EXPECTED_FILES=(
     "FEM/TI_Little_Pairs/ernie_TDCS_2_scalar.msh"
     "FEM/TI_Little_Pairs/ernie_TDCS_2_scalar.msh.opt"
     "FEM/TI_Little_Pairs/fields_summary.txt"
-    # ROI_analysis files
     "ROI_analysis/mean_max_values.txt"
-    # Whole-Brain-mesh files
     "Whole-Brain-mesh/ernie_TI_Little_Pairs_TI.msh"
     "Whole-Brain-mesh/results/ernie_TI_Little_Pairs_TI_histogram.png"
     "Whole-Brain-mesh/results/ernie_TI_Little_Pairs_TI_peaks_focality.mat"
     "Whole-Brain-mesh/results/ernie_TI_Little_Pairs_TI_surface.png"
     "Whole-Brain-mesh/results/summary.txt"
-    # montage_imgs files
     "montage_imgs/Little_Pairs_highlighted_visualization.png"
-    # niftis files
     "niftis/Anterior-sphere.nii.gz"
     "niftis/grey_ernie_TI_Little_Pairs_TI_output_MNI_TI_max.nii"
     "niftis/white_ernie_TI_Little_Pairs_TI_output_MNI_TI_max.nii"
-    # parcellated_mesh files
     "parcellated_mesh/grey_ernie_TI_Little_Pairs_TI.msh"
     "parcellated_mesh/white_ernie_TI_Little_Pairs_TI.msh"
 )
