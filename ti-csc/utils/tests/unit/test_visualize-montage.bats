@@ -1,23 +1,46 @@
 #!/usr/bin/env bats
 
+# Setup function to initialize variables and check permissions
 function setup() {
     echo "setting up..."
     script="/ti-csc/analyzer/visualize-montage.sh"
     sim_mode="U"
     output_dir="/tmp/output"
-    dos2unix $script
+    
+    # Ensure script exists
+    if [ ! -f "$script" ]; then
+        echo "Error: Script $script does not exist."
+        exit 1
+    fi
+
+    # Debug permissions and ownership
+    echo "Script permissions before setup:"
+    ls -l "$script"
+    echo "Current user: $(whoami)"
+
+    # Convert line endings and ensure execution permission
+    dos2unix "$script"
+    chmod +x "$script" # Add executable permission
+    ls -l "$script" # Debug to confirm permissions are updated
 }
 
 @test "Example Test" {
-        run echo hello
-        [ "$output" == hello ]
+    run echo hello
+    [ "$output" == hello ]
 }
 
 @test "Test Non-Exisiting Montage File" {
-    export PROJECT_DIR_NAME="/tmp/mock_project_dir" # Change the project directory to a mocked project that does not contain a montage file
-    # mkdir /tmp/mock_project_dir # Create a mock project folder
-    # mkdir /tmp/mock_project_dir/utils # Create a mock utils folder
-    run $script $sim_mode $output_dir # Run the script with good parameters
+    export PROJECT_DIR_NAME="/tmp/mock_project_dir" # Mock project directory
+    mkdir -p "$PROJECT_DIR_NAME" # Ensure the directory exists
+
+    # Debug environment
+    echo "Testing with project directory: $PROJECT_DIR_NAME"
+    echo "Testing with script: $script"
+    echo "Script permissions:"
+    ls -l "$script"
+
+    # Run test
+    run $script $sim_mode $output_dir
     [ "$status" -ne 0 ] # Assert the exit status is non-zero
 
     # Debugging output comparison
@@ -30,7 +53,14 @@ function setup() {
 }
 
 @test "Test Invalid Montage Type" {
-    run $script "Q" $output_dir # Call the script with a non M or U sim_mode
+    echo "Running invalid montage type test..."
+
+    # Debug permissions and setup
+    echo "Script permissions:"
+    ls -l "$script"
+
+    # Run test
+    run $script "Q" $output_dir
     [ "$status" -ne 0 ] # Assert the exit status is non-zero
 
     # Debugging output comparison
@@ -43,7 +73,14 @@ function setup() {
 }
 
 @test "Test Non-Exisiting Output Directory" {
-    run $script $sim_mode $output_dir # Call script with a Non-Exisiting Output Directory (/tmp/output)
+    echo "Testing with output directory: $output_dir"
+
+    # Debug and ensure permissions
+    echo "Output directory permissions before test:"
+    ls -ld "$(dirname "$output_dir")"
+
+    # Run test
+    run $script $sim_mode $output_dir
 
     # Debugging output comparison
     if [ ! -d "$output_dir" ]; then
@@ -54,6 +91,11 @@ function setup() {
     [ -d $output_dir ] # Assert that the new output directory was created
 }
 
+# Teardown function to clean up
 function teardown() {
     echo "tearing down..."
+    # Optionally remove temporary files or directories
+    if [ -d "$output_dir" ]; then
+        rm -rf "$output_dir"
+    fi
 }
