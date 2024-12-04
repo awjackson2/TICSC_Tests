@@ -33,13 +33,10 @@ jobs:
     - name: Run Integration Tests Inside Docker
       if: always()  # Ensures this step runs no matter the status of previous steps
       run: |
-        sudo docker run \
-          -v /usr/local/MATLAB/MATLAB_Runtime/R2024a:/usr/local/MATLAB/MATLAB_Runtime/R2024a \
-          -e LD_LIBRARY_PATH=/usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/R2024a/bin/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/R2024a/sys/os/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/R2024a/sys/java/jre/glnxa64/jre/lib/amd64 \
-          --rm ticsctests bash -c "\
-            chmod +x /ti-csc/utils/tests/integration/test_analyzerIT.sh && \
-            /ti-csc/utils/tests/integration/test_analyzerIT.sh || \
-            (echo 'Integration tests failed. Reviewing logs:' && exit 1)"
+        sudo docker run -v /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.24.1:/usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.25.1 --rm ticsctests bash -c "\
+          chmod +x /ti-csc/utils/tests/integration/test_analyzerIT.sh && \
+          /ti-csc/utils/tests/integration/test_analyzerIT.sh || \
+          (echo 'Integration tests failed. Reviewing logs:' && exit 1)"
 
     - name: Cleanup Docker
       if: always()  # Ensures cleanup happens even if prior steps fail
