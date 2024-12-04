@@ -104,7 +104,7 @@ RUN git clone https://github.com/bats-core/bats-core.git /tmp/bats \
 # Set MATLAB Runtime version and installation directory
 RUN mkdir /usr/local/MATLAB
 RUN mkdir /usr/local/MATLAB/MATLAB_Runtime
-ENV MATLAB_RUNTIME_INSTALL_DIR=/usr/local/MATLAB/MATLAB_Runtime
+ENV MATLAB_RUNTIME_INSTALL_DIR=/opt/conda/envs/fsl-env/lib:/usr/local/MATLAB/MATLAB_Runtime
 ENV LD_LIBRARY_PATH="${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/runtime/glnxa64/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/runtime/glnxa64/lib/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/bin/glnxa64/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/sys/os/glnxa64/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/sys/java/jre/glnxa64/jre/lib/amd64:$LD_LIBRARY_PATH"
 
 # Download and install MATLAB Runtime R2024a
@@ -116,8 +116,7 @@ RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deplo
     && echo "MATLAB Runtime installation log:" && cat /tmp/matlab_runtime_install.log \
     && echo "Verifying MATLAB Runtime installation directory structure:" \
     && ls -R /usr/local/MATLAB/MATLAB_Runtime || echo "MATLAB Runtime directory not found at /usr/local/MATLAB/MATLAB_Runtime" \
-    && rm -rf /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip /tmp/matlab_runtime_installer \
-
+    && rm -rf /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip /tmp/matlab_runtime_installer
 
 # Set environment variables for SimNIBS
 ENV PATH="/root/SimNIBS-4.1/bin:$PATH"
