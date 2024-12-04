@@ -43,7 +43,7 @@ jobs:
           && echo "Verifying MATLAB Runtime installation directory structure:" \
           && ls -R /usr/local/MATLAB/MATLAB_Runtime || echo "MATLAB Runtime directory not found at /usr/local/MATLAB/MATLAB_Runtime" \
           && rm -rf /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip /tmp/matlab_runtime_installer /tmp/matlab_runtime_install.log \
-          chmod +x /ti-csc/utils/tests/integration/test_analyzerIT.sh && \
+          && chmod +x /ti-csc/utils/tests/integration/test_analyzerIT.sh && \
           /ti-csc/utils/tests/integration/test_analyzerIT.sh || \
           (echo 'Integration tests failed. Reviewing logs:' && exit 1)"
 
