@@ -26,16 +26,25 @@ jobs:
     - name: Run Unit Tests Inside Docker
       run: |
         sudo docker run --rm ticsctests bash -c "simnibs_python -m pytest ti-csc/utils/tests/unit" || \
-        (echo "Unit tests failed. Reviewing logs:" && exit 1)
+        (echo "Python unit tests failed. Reviewing logs:" && exit 1)
         sudo docker run --rm ticsctests bash -c "bats ti-csc/utils/tests/unit/" || \
-        (echo "Unit tests failed. Reviewing logs:" && exit 1)
+        (echo "Bash unit tests failed. Reviewing logs:" && exit 1)
 
     - name: Run Integration Tests Inside Docker
       if: always()  # Ensures this step runs no matter the status of previous steps
       run: |
         sudo docker run -v /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.24.1:/usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.25.1 --rm ticsctests bash -c "\
+          wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip -P /tmp \
+          && echo "MATLAB Runtime ZIP file details:" && ls -lh /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip \
+          && unzip -q /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip -d /tmp/matlab_runtime_installer \
+          && echo "MATLAB Runtime installer contents:" && ls -lh /tmp/matlab_runtime_installer \
+          && /tmp/matlab_runtime_installer/install -destinationFolder /usr/local/MATLAB/MATLAB_Runtime -agreeToLicense yes -mode silent > /tmp/matlab_runtime_install.log 2>&1 \
+          && echo "MATLAB Runtime installation log:" && cat /tmp/matlab_runtime_install.log \
+          && echo "Verifying MATLAB Runtime installation directory structure:" \
+          && ls -R /usr/local/MATLAB/MATLAB_Runtime || echo "MATLAB Runtime directory not found at /usr/local/MATLAB/MATLAB_Runtime" \
+          && rm -rf /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip /tmp/matlab_runtime_installer /tmp/matlab_runtime_install.log \
           chmod +x /ti-csc/utils/tests/integration/test_analyzerIT.sh && \
-          /ti-csc/utils/tests/integration/test_analyzerIT.sh /usr/local/matlab/R2020b || \
+          /ti-csc/utils/tests/integration/test_analyzerIT.sh || \
           (echo 'Integration tests failed. Reviewing logs:' && exit 1)"
 
     - name: Cleanup Docker
