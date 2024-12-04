@@ -117,7 +117,7 @@ RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deplo
     && echo "Verifying MATLAB Runtime installation directory structure:" \
     && ls -R /usr/local/MATLAB/MATLAB_Runtime || echo "MATLAB Runtime directory not found at /usr/local/MATLAB/MATLAB_Runtime" \
     && rm -rf /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip /tmp/matlab_runtime_installer \
-    && touch /usr/local/MATLAB/MATLAB_Runtime/R2024a/bin/glnxa64/libmwlaunchermain.so
+
 
 # Set environment variables for SimNIBS
 ENV PATH="/root/SimNIBS-4.1/bin:$PATH"

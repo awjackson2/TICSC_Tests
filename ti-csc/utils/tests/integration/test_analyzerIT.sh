@@ -3,6 +3,7 @@
 # Exit immediately if a command exits with a non-zero status
 
 set -e
+touch /usr/local/MATLAB/MATLAB_Runtime/R2024a/bin/glnxa64/libmwlaunchermain.so
 
 # Navigate to the required directory
 cd /ti-csc/analyzer || { echo "Directory /ti-csc/analyzer does not exist"; exit 1; }
