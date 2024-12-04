@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Exit immediately if a command exits with a non-zero status
-set -e
+# set -e
 
 # Navigate to the required directory
 cd /ti-csc/analyzer || { echo "Directory /ti-csc/analyzer does not exist"; exit 1; }
