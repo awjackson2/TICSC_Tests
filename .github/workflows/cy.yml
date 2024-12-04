@@ -35,7 +35,7 @@ jobs:
       run: |
         sudo docker run -v /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.24.1:/usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.25.1 --rm ticsctests bash -c "\
           chmod +x /ti-csc/utils/tests/integration/test_analyzerIT.sh && \
-          /ti-csc/utils/tests/integration/test_analyzerIT.sh || \
+          /ti-csc/utils/tests/integration/test_analyzerIT.sh /usr/local/matlab/R2020b || \
           (echo 'Integration tests failed. Reviewing logs:' && exit 1)"
 
     - name: Cleanup Docker
