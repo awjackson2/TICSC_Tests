@@ -3,6 +3,8 @@
 
 set -e
 
+export LD_LIBRARY_PATH="${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/runtime/glnxa64/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/runtime/glnxa64/lib/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/bin/glnxa64/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/sys/os/glnxa64/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/sys/java/jre/glnxa64/jre/lib/amd64:$LD_LIBRARY_PATH"
+
 # Navigate to the required directory
 cd /ti-csc/analyzer || { echo "Directory /ti-csc/analyzer does not exist"; exit 1; }
 
