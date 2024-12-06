@@ -6,6 +6,7 @@ set -e
 if [ -f "/opt/conda/etc/profile.d/conda.sh" ]; then
     source /opt/conda/etc/profile.d/conda.sh
 else
+
     echo "Error: Conda setup script not found. Ensure Conda is installed correctly."
     exit 1
 fi
