@@ -1,48 +1,37 @@
-name: Validate Features Branch
+name: Run test suite
 
-on:
-  pull_request:
-    branches: [main]
+on: 
+    pull_request:
+        branches:
+            - main
+    push:
+        branches:
+            - main
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Set up Docker
-      run: |
-        sudo docker --version  # Confirm Docker is installed
-        sudo df -h             # Check available disk space
-        sudo free -m           # Check available memory
-
-    - name: Build Docker Image
-      run: |
-        sudo docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "." || \
-        (echo "Docker build failed. Reviewing logs:" && exit 1)
-
-    - name: Run Unit Tests Inside Docker
-      run: |
-        sudo docker run --rm ticsctests bash -c "simnibs_python -m pytest ti-csc/utils/tests/unit" || \
-        (echo "Python unit tests failed. Reviewing logs:" && exit 1)
-        sudo docker run --rm ticsctests bash -c "bats ti-csc/utils/tests/unit/" || \
-        (echo "Bash unit tests failed. Reviewing logs:" && exit 1)
-
-    - name: Run Integration Tests Inside Docker
-      if: always()  # Ensures this step runs no matter the status of previous steps
-      run: |
-        sudo docker run -v /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.24.1:/usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.25.1 --rm ticsctests bash -c "\
-          # Ensure the necessary script is executable
-          chmod +x /ti-csc/utils/tests/integration/test_analyzerIT.sh && \
-          
-          # Run the integration tests script
-          /ti-csc/utils/tests/integration/test_analyzerIT.sh || \
-          (echo 'Integration tests failed. Reviewing logs:' && exit 1)"
-        
-
-    - name: Cleanup Docker
-      if: always()  # Ensures cleanup happens even if prior steps fail
-      run: |
-        sudo docker system prune --all --force
+    run-tests:
+        name: Run Tests
+        runs-on: ubuntu-latest
+        steps:
+            - name: Cleanup workspace
+              run: rm -rf ./build ./temp || true
+            - name: Checkout code
+              uses: actions/checkout@v2
+            - name: Free up disk space
+              run: |
+                chmod +x ./free_disk_space.sh
+                ./free_disk_space.sh
+            - name: Run docker build
+              run: docker build --pull --rm -f "Dockerfile" -t ticsctestable:latest "."
+            - name: Running unit tests
+              run: |
+                docker run ticsctestable:latest cd ti-csc/ && simnibs_python -m pytest /ti-csc/utils/tests/unit/
+                docker run ticsctestable:latest bats /ti-csc/utils/tests/unit/
+            - name: Running integration tests
+              run: |
+                docker run ticsctestable:latest bash /ti-csc/utils/tests/integration/test_analyzerIT.sh
+            - name: Cleanup Docker
+              if: always()  # Ensures cleanup happens even if prior steps fail
+              run: |
+                sudo docker system prune --all --force
+      
