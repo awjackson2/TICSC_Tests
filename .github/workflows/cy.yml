@@ -35,6 +35,6 @@ jobs:
             - name: Cleanup Docker
               if: always()  # Ensures cleanup happens even if prior steps fail
               run: |
-                echo /root/fsl_installation_20241212055255.log
+                cat /root/fsl_installation_20241212055255.log
                 sudo docker system prune --all --force
       
