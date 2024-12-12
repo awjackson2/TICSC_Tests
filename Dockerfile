@@ -149,6 +149,15 @@ RUN curl -L https://github.com/simnibs/example-dataset/releases/latest/download/
 
 RUN dos2unix /ti-csc/analyzer/*.sh /ti-csc/analyzer/field-analysis/*.sh /ti-csc/utils/tests/integration/*.sh
 
+# Install Miniconda
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
+    bash /tmp/miniconda.sh -b -p /usr/local/conda && \
+    rm /tmp/miniconda.sh && \
+    /usr/local/conda/bin/conda clean -tipsy
+
+# Add Conda to PATH
+ENV PATH="/usr/local/conda/bin:$PATH"
+
 ENV FSLDIR          "/usr/local/fsl"
 ENV DEBIAN_FRONTEND "noninteractive"
 ENV LANG            "en_GB.UTF-8"
