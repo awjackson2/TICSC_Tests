@@ -164,7 +164,7 @@ ENV LANG            "en_GB.UTF-8"
 
 # Install FSL (~)
 RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py && \
-    python ./fslinstaller.py -d /usr/local/fsl/
+    python ./fslinstaller.py -d /usr/local/fsl --debug
 
 ENTRYPOINT [ "sh", "-c", ". /usr/local/fsl/etc/fslconf/fsl.sh && /bin/bash" ]
 
