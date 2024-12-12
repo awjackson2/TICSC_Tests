@@ -30,10 +30,9 @@ jobs:
                 bats /ti-csc/utils/tests/unit/"
             - name: Running integration tests
               run: |
-                docker run --rm ticsctests:latest bash /ti-csc/utils/tests/integration/test_analyzerIT.sh
+                docker run -v /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.24.1:/usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.25.1 --rm ticsctests bash /ti-csc/utils/tests/integration/test_analyzerIT.sh
             - name: Cleanup Docker
               if: always()  # Ensures cleanup happens even if prior steps fail
               run: |
-                sudo cat /root/fsl_installation_20241212055255.log
                 sudo docker system prune --all --force
       
