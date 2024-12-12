@@ -71,7 +71,21 @@ RUN apt-get update && apt-get install -y \
     fontconfig \
     execstack \
     imagemagick \
+    curl \
+    dos2unix \
+    unzip \
+    git \
+    python3 \
+    python3-pip \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+ENV FSLDIR          "/usr/local/fsl"
+ENV DEBIAN_FRONTEND "noninteractive"
+ENV LANG            "en_GB.UTF-8"
+    
+# Install FSL (~)
+RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py && \
+    python ./fslinstaller.py -d /usr/local/fsl --debug
 
 # Set up Python environment and install required Python packages
 RUN pip3 install dcm2niix numpy scipy pandas meshio nibabel
@@ -117,16 +131,6 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 # Set working directory to TI-CSC
 WORKDIR /ti-csc
 
-# Install necessary tools
-RUN apt-get update && apt-get install -y \
-    curl \
-    dos2unix \
-    unzip \
-    git \
-    python3 \
-    python3-pip \
-    && rm -rf /var/lib/apt/lists/*
-
 # Install Bats (~1MB)
 RUN git clone https://github.com/bats-core/bats-core.git /tmp/bats \
     && /tmp/bats/install.sh /usr/local \
@@ -157,14 +161,6 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -
 
 # Add Conda to PATH
 ENV PATH="/usr/local/conda/bin:$PATH"
-
-ENV FSLDIR          "/usr/local/fsl"
-ENV DEBIAN_FRONTEND "noninteractive"
-ENV LANG            "en_GB.UTF-8"
-
-# Install FSL (~)
-RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py && \
-    python ./fslinstaller.py -d /usr/local/fsl --debug
 
 ENTRYPOINT [ "sh", "-c", ". /usr/local/fsl/etc/fslconf/fsl.sh && /bin/bash" ]
 
