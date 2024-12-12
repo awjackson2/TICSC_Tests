@@ -22,16 +22,15 @@ jobs:
                 chmod +x ./free_disk_space.sh
                 ./free_disk_space.sh
             - name: Run docker build
-              run: docker build --pull --rm -f "Dockerfile" -t ticsctestable:latest "."
+              run: docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "."
             - name: Running unit tests
               run: |
-                docker run --rm ticsctestable:latest sh -c "
-                  cd ti-csc/ && 
-                  simnibs_python -m pytest /ti-csc/utils/tests/unit/ && 
-                  bats /ti-csc/utils/tests/unit/"
+                docker run --rm ticsctests:latest sh -c "
+                simnibs_python -m pytest /ti-csc/utils/tests/unit/ && 
+                bats /ti-csc/utils/tests/unit/"
             - name: Running integration tests
               run: |
-                docker run --rm ticsctestable:latest bash /ti-csc/utils/tests/integration/test_analyzerIT.sh
+                docker run --rm ticsctests:latest bash /ti-csc/utils/tests/integration/test_analyzerIT.sh
             - name: Cleanup Docker
               if: always()  # Ensures cleanup happens even if prior steps fail
               run: |

@@ -85,7 +85,8 @@ ENV LANG="en_GB.UTF-8"
     
 # Install FSL (~)
 RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py && \
-    python ./fslinstaller.py -d /usr/local/fsl --debug
+    python ./fslinstaller.py -d /usr/local/fsl --debug \
+    source $FSLDIR/etc/fslconf/fsl.sh
 
 # Set up Python environment and install required Python packages
 RUN pip3 install dcm2niix numpy scipy pandas meshio nibabel

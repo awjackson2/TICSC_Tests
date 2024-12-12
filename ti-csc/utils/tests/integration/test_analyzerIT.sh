@@ -2,18 +2,6 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-# Source Conda setup script
-if [ -f "/opt/conda/etc/profile.d/conda.sh" ]; then
-    source /opt/conda/etc/profile.d/conda.sh
-else
-
-    echo "Error: Conda setup script not found. Ensure Conda is installed correctly."
-    exit 1
-fi
-
-# Activate the Conda environment
-conda activate fsl-env || { echo "Error: Failed to activate Conda environment 'fsl-env'"; exit 1; }
-
 # Navigate to the required directory
 cd /ti-csc/analyzer || { echo "Directory /ti-csc/analyzer does not exist"; exit 1; }
 
