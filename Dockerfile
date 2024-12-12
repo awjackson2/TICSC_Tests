@@ -153,17 +153,6 @@ RUN curl -L https://github.com/simnibs/example-dataset/releases/latest/download/
 
 RUN dos2unix /ti-csc/analyzer/*.sh /ti-csc/analyzer/field-analysis/*.sh /ti-csc/utils/tests/integration/*.sh
 
-# Install Miniconda
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
-    bash /tmp/miniconda.sh -b -p /usr/local/conda && \
-    rm /tmp/miniconda.sh && \
-    /usr/local/conda/bin/conda clean -a -y
-
-# Add Conda to PATH
-ENV PATH="/usr/local/conda/bin:$PATH"
-
-ENTRYPOINT [ "sh", "-c", ". /usr/local/fsl/etc/fslconf/fsl.sh && /bin/bash" ]
-
 ENV LOCAL_PROJECT_DIR="mnt/testing_project_dir"
 ENV PROJECT_DIR_NAME="testing_project_dir"
 
