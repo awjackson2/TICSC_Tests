@@ -87,7 +87,6 @@ COPY ../ti-csc ti-csc
 # Make sure the scripts are executable after they are copied
 RUN chmod -R +x /ti-csc/analyzer/field-analysis/
 
-# Additional steps to run execstack on process_mesh_files in specific field-analysis directories
 RUN execstack -s /ti-csc/analyzer/field-analysis/process_mesh_files \
     && execstack -s /ti-csc/optimizer/field-analysis/process_mesh_files
 
