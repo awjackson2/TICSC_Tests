@@ -84,38 +84,19 @@ RUN mkdir /ti-csc
 # Copy ti-csc
 COPY ../ti-csc ti-csc
 
-# Make sure the scripts are executable after they are copied
-RUN chmod -R +x /ti-csc/analyzer/field-analysis/
-
-RUN execstack -s /ti-csc/analyzer/field-analysis/process_mesh_files \
-    && execstack -s /ti-csc/optimizer/field-analysis/process_mesh_files
-
 # Install SimNIBS
 RUN wget https://github.com/simnibs/simnibs/releases/download/v4.1.0/simnibs_installer_linux.tar.gz -P /simnibs \
     && tar -xzf /simnibs/simnibs_installer_linux.tar.gz -C /simnibs \
     && /simnibs/simnibs_installer/install -s
 
-# Install Bats
-RUN git clone https://github.com/bats-core/bats-core.git /tmp/bats \
-    && /tmp/bats/install.sh /usr/local \
-    && rm -rf /tmp/bats
-
 # Set MATLAB Runtime version and installation directory
-RUN mkdir /usr/local/MATLAB
-RUN mkdir /usr/local/MATLAB/MATLAB_Runtime
 ENV MATLAB_RUNTIME_INSTALL_DIR=/usr/local/MATLAB/MATLAB_Runtime
-ENV LD_LIBRARY_PATH="${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/runtime/glnxa64/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/runtime/glnxa64/lib/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/bin/glnxa64/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/sys/os/glnxa64/:${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/sys/java/jre/glnxa64/jre/lib/amd64:$LD_LIBRARY_PATH"
 
 # Download and install MATLAB Runtime R2024a
-RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip -P /tmp \
-    && echo "MATLAB Runtime ZIP file details:" && ls -lh /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip \
-    && unzip -q /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip -d /tmp/matlab_runtime_installer \
-    && echo "MATLAB Runtime installer contents:" && ls -lh /tmp/matlab_runtime_installer \
-    && /tmp/matlab_runtime_installer/install -destinationFolder /usr/local/MATLAB/MATLAB_Runtime -agreeToLicense yes -mode silent > /tmp/matlab_runtime_install.log 2>&1 \
-    && echo "MATLAB Runtime installation log:" && cat /tmp/matlab_runtime_install.log \
-    && echo "Verifying MATLAB Runtime installation directory structure:" \
-    && ls -R /usr/local/MATLAB/MATLAB_Runtime || echo "MATLAB Runtime directory not found at /usr/local/MATLAB/MATLAB_Runtime" \
-    && rm -rf /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip /tmp/matlab_runtime_installer
+RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip -P /tmp && \
+    unzip -q /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip -d /tmp/matlab_runtime_installer && \
+    /tmp/matlab_runtime_installer/install -destinationFolder ${MATLAB_RUNTIME_INSTALL_DIR} -agreeToLicense yes -mode silent && \
+    rm -rf /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip /tmp/matlab_runtime_installer
 
 # Set environment variables for SimNIBS
 ENV PATH="/root/SimNIBS-4.1/bin:$PATH"
@@ -159,5 +140,5 @@ ENV PROJECT_DIR_NAME="testing_project_dir"
 # Fix line endings for shell scripts
 RUN [ -d /ti-csc/analyzer ] && find /ti-csc/analyzer -type f -name "*.sh" -exec dos2unix {} + || echo "/ti-csc/analyzer does not exist"
 
-
-
+# Default command to run pytest for testing
+# CMD ["pytest", "--maxfail=3", "--disable-warnings", "/ti-csc/tests"]
