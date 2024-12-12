@@ -25,11 +25,13 @@ jobs:
               run: docker build --pull --rm -f "Dockerfile" -t ticsctestable:latest "."
             - name: Running unit tests
               run: |
-                docker run ticsctestable:latest cd ti-csc/ && simnibs_python -m pytest /ti-csc/utils/tests/unit/
-                docker run ticsctestable:latest bats /ti-csc/utils/tests/unit/
+                docker run --rm ticsctestable:latest sh -c "
+                  cd ti-csc/ && 
+                  simnibs_python -m pytest /ti-csc/utils/tests/unit/ && 
+                  bats /ti-csc/utils/tests/unit/"
             - name: Running integration tests
               run: |
-                docker run ticsctestable:latest bash /ti-csc/utils/tests/integration/test_analyzerIT.sh
+                docker run --rm ticsctestable:latest bash /ti-csc/utils/tests/integration/test_analyzerIT.sh
             - name: Cleanup Docker
               if: always()  # Ensures cleanup happens even if prior steps fail
               run: |
