@@ -79,9 +79,9 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ENV FSLDIR          "/usr/local/fsl"
-ENV DEBIAN_FRONTEND "noninteractive"
-ENV LANG            "en_GB.UTF-8"
+ENV FSLDIR="/usr/local/fsl"
+ENV DEBIAN_FRONTEND="noninteractive"
+ENV LANG="en_GB.UTF-8"
     
 # Install FSL (~)
 RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py && \
