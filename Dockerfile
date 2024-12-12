@@ -153,7 +153,7 @@ RUN dos2unix /ti-csc/analyzer/*.sh /ti-csc/analyzer/field-analysis/*.sh /ti-csc/
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
     bash /tmp/miniconda.sh -b -p /usr/local/conda && \
     rm /tmp/miniconda.sh && \
-    /usr/local/conda/bin/conda clean -tipsy
+    /usr/local/conda/bin/conda clean -a -y
 
 # Add Conda to PATH
 ENV PATH="/usr/local/conda/bin:$PATH"
