@@ -97,21 +97,22 @@ RUN mkdir -p /simnibs && chmod -R 777 /simnibs && \
 ENV PATH="/root/SimNIBS-4.1/bin:$PATH"
 ENV SIMNIBSDIR="/root/SimNIBS-4.1"
 
-# Set MATLAB Runtime version and installation directory
+# Set MATLAB Runtime version and installation directory for R2024b
+ENV MATLAB_RUNTIME_VERSION="R2024b"
 ENV MATLAB_RUNTIME_INSTALL_DIR="/usr/local/MATLAB/MATLAB_Runtime"
 
-# Set LD_LIBRARY_PATH for MATLAB Runtime
+# Set LD_LIBRARY_PATH for MATLAB Runtime R2024b
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+${LD_LIBRARY_PATH}:}\
-${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/runtime/glnxa64:\
-${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/bin/glnxa64:\
-${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/sys/os/glnxa64:\
-${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/extern/bin/glnxa64"
+${MATLAB_RUNTIME_INSTALL_DIR}/${MATLAB_RUNTIME_VERSION}/runtime/glnxa64:\  
+${MATLAB_RUNTIME_INSTALL_DIR}/${MATLAB_RUNTIME_VERSION}/bin/glnxa64:\  
+${MATLAB_RUNTIME_INSTALL_DIR}/${MATLAB_RUNTIME_VERSION}/sys/os/glnxa64:\  
+${MATLAB_RUNTIME_INSTALL_DIR}/${MATLAB_RUNTIME_VERSION}/extern/bin/glnxa64"
 
-# Download and install MATLAB Runtime R2024a (~3.8GB)
-RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip -P /tmp && \
-    unzip -q /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip -d /tmp/matlab_runtime_installer && \
+# Download and install MATLAB Runtime R2024b (~3.8GB)
+RUN wget https://ssd.mathworks.com/supportfiles/downloads/${MATLAB_RUNTIME_VERSION}/Release/1/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_${MATLAB_RUNTIME_VERSION}_Update_1_glnxa64.zip -P /tmp && \
+    unzip -q /tmp/MATLAB_Runtime_${MATLAB_RUNTIME_VERSION}_Update_1_glnxa64.zip -d /tmp/matlab_runtime_installer && \
     /tmp/matlab_runtime_installer/install -destinationFolder ${MATLAB_RUNTIME_INSTALL_DIR} -agreeToLicense yes -mode silent && \
-    rm -rf /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip /tmp/matlab_runtime_installer
+    rm -rf /tmp/MATLAB_Runtime_${MATLAB_RUNTIME_VERSION}_Update_1_glnxa64.zip /tmp/matlab_runtime_installer
 
 # Clone TI-CSC repository
 COPY ./ti-csc ti-csc
