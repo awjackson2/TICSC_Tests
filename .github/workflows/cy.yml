@@ -28,7 +28,7 @@ jobs:
                 sudo docker run --rm ticsctests bash -c "simnibs_python -m pytest /ti-csc/utils/tests/unit" || \
                 (echo "Python unit tests failed. Reviewing logs:" && exit 1)
                 sudo docker run --rm ticsctests bash -c "bats /ti-csc/utils/tests/unit/" || \
-                (echo "Bash unit tests failed. Reviewing logs:" && exit 1
+                (echo "Bash unit tests failed. Reviewing logs:" && exit 1)
             - name: Running integration tests
               if: always() 
               run: |

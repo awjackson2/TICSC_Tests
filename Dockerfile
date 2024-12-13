@@ -140,6 +140,12 @@ RUN mkdir -p /mnt/testing_project_dir /mnt/testing_project_dir/utils /mnt/testin
     rm -f /mnt/testing_project_dir/Subjects/simnibs4_examples.zip && \
     dos2unix /ti-csc/analyzer/*.sh /ti-csc/analyzer/field-analysis/*.sh /ti-csc/utils/tests/integration/*.sh
 
+# Prepare directories for testing
+RUN mkdir -p /mnt/testing_project_dir/utils /mnt/testing_project_dir/Subjects /mnt/testing_project_dir/Simulations
+COPY /ti-csc/utils/testing_data/utils/montage_list.json /mnt/testing_project_dir/utils
+COPY /ti-csc/utils/testing_data/utils/roi_list.json /mnt/testing_project_dir/utils
+COPY /ti-csc/utils/testing_data/utils/EGI_template.csv /mnt/testing_project_dir/Subjects/m2m_ernie/eeg_positions/
+
 ENV LOCAL_PROJECT_DIR="mnt/testing_project_dir"
 ENV PROJECT_DIR_NAME="testing_project_dir"
 
