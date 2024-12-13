@@ -34,7 +34,6 @@ RUN apt-get update && apt-get install -y \
     automake \
     pkg-config \
     gettext \
-    curl \
     ninja-build \
     python3.8-venv \
     python3.8-dev \
@@ -68,15 +67,11 @@ RUN apt-get update && apt-get install -y \
     tcsh \
     tree \
     locales \
-    fontconfig \
     execstack \
     imagemagick \
     curl \
     dos2unix \
-    unzip \
-    git \
     python3 \
-    python3-pip \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENV FSLDIR="/usr/local/fsl"
@@ -110,8 +105,6 @@ ${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/runtime/glnxa64:\
 ${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/bin/glnxa64:\
 ${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/sys/os/glnxa64:\
 ${MATLAB_RUNTIME_INSTALL_DIR}/R2024a/extern/bin/glnxa64"
-
-
 
 # Download and install MATLAB Runtime R2024a (~ 3.8GB)
 RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip -P /tmp \
@@ -166,6 +159,5 @@ RUN dos2unix /ti-csc/analyzer/*.sh /ti-csc/analyzer/field-analysis/*.sh /ti-csc/
 ENV LOCAL_PROJECT_DIR="mnt/testing_project_dir"
 ENV PROJECT_DIR_NAME="testing_project_dir"
 
-# Set the entrypoint and default command
-#ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-#CMD ["/bin/bash"]
+# Set the entrypoint
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
