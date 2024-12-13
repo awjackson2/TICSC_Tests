@@ -11,7 +11,7 @@ on:
 jobs:
     run-tests:
         name: Run Tests
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-20.04
         steps:
             - name: Cleanup workspace
               run: rm -rf ./build ./temp || true
