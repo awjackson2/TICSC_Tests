@@ -102,7 +102,16 @@ ENV PATH="/root/SimNIBS-4.1/bin:$PATH"
 ENV SIMNIBSDIR="/root/SimNIBS-4.1"
 
 # Set MATLAB Runtime version and installation directory
-ENV MATLAB_RUNTIME_INSTALL_DIR=/usr/local/MATLAB/MATLAB_Runtime
+ENV MATLAB_RUNTIME_INSTALL_DIR="/usr/local/MATLAB/MATLAB_Runtime"
+
+# Set LD_LIBRARY_PATH for MATLAB Runtime
+ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+${LD_LIBRARY_PATH}:}\
+${MATLAB_RUNTIME_INSTALL_DIR}/R2024b/runtime/glnxa64:\
+${MATLAB_RUNTIME_INSTALL_DIR}/R2024b/bin/glnxa64:\
+${MATLAB_RUNTIME_INSTALL_DIR}/R2024b/sys/os/glnxa64:\
+${MATLAB_RUNTIME_INSTALL_DIR}/R2024b/extern/bin/glnxa64"
+
+
 
 # Download and install MATLAB Runtime R2024a (~ 3.8GB)
 RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip -P /tmp \
