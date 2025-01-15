@@ -100,13 +100,8 @@ ENV SIMNIBSDIR="/root/SimNIBS-4.1"
 # Set MATLAB Runtime version and installation directory for R2024b
 ENV MATLAB_RUNTIME_VERSION="R2024b"
 ENV MATLAB_RUNTIME_INSTALL_DIR="/usr/local/MATLAB/MATLAB_Runtime"
-
-# Set LD_LIBRARY_PATH for MATLAB Runtime R2024b
-ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+${LD_LIBRARY_PATH}:}\
-${MATLAB_RUNTIME_INSTALL_DIR}/${MATLAB_RUNTIME_VERSION}/runtime/glnxa64:\  
-${MATLAB_RUNTIME_INSTALL_DIR}/${MATLAB_RUNTIME_VERSION}/bin/glnxa64:\  
-${MATLAB_RUNTIME_INSTALL_DIR}/${MATLAB_RUNTIME_VERSION}/sys/os/glnxa64:\  
-${MATLAB_RUNTIME_INSTALL_DIR}/${MATLAB_RUNTIME_VERSION}/extern/bin/glnxa64"
+# Set environment variables for MATLAB Runtime
+ENV LD_LIBRARY_PATH="/usr/local/MATLAB/MATLAB_Runtime/R2024b/bin/glnxa64:$LD_LIBRARY_PATH"
 
 # Download and install MATLAB Runtime R2024b (~3.8GB)
 RUN wget https://ssd.mathworks.com/supportfiles/downloads/${MATLAB_RUNTIME_VERSION}/Release/1/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_${MATLAB_RUNTIME_VERSION}_Update_1_glnxa64.zip -P /tmp && \
@@ -125,9 +120,10 @@ RUN mkdir -p $SIMNIBSDIR/resources/ElectrodeCaps_MNI/ && \
 RUN execstack -s /ti-csc/analyzer/field-analysis/process_mesh_files && \
     execstack -s /ti-csc/optimizer/field-analysis/process_mesh_files
 
-# Entry point script
+# Copy the entrypoint script and ensure correct permissions and line endings
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh && \
+    dos2unix /usr/local/bin/entrypoint.sh
 
 # Set working directory to TI-CSC
 WORKDIR /ti-csc
@@ -140,13 +136,6 @@ RUN git clone https://github.com/bats-core/bats-core.git /tmp/bats && \
 # Install pytest (~1MB)
 RUN pip3 install pytest && \
     rm -rf /root/.cache/pip
-
-# Prepare directories and clean after testing setup
-RUN mkdir -p /mnt/testing_project_dir /mnt/testing_project_dir/utils /mnt/testing_project_dir/Subjects /mnt/testing_project_dir/Simulations && \
-    curl -L https://github.com/simnibs/example-dataset/releases/latest/download/simnibs4_examples.zip -o /mnt/testing_project_dir/Subjects/simnibs4_examples.zip && \
-    unzip -q /mnt/testing_project_dir/Subjects/simnibs4_examples.zip -d /mnt/testing_project_dir/Subjects || echo "Zip file missing or download failed" && \
-    rm -f /mnt/testing_project_dir/Subjects/simnibs4_examples.zip && \
-    dos2unix /ti-csc/analyzer/*.sh /ti-csc/analyzer/field-analysis/*.sh /ti-csc/utils/tests/integration/*.sh
 
 # Prepare directories for testing
 RUN mkdir -p /mnt/testing_project_dir/utils /mnt/testing_project_dir/Subjects /mnt/testing_project_dir/Simulations
