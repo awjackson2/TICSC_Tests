@@ -101,7 +101,7 @@ ENV SIMNIBSDIR="/root/SimNIBS-4.1"
 ENV MATLAB_RUNTIME_INSTALL_DIR="/usr/local/MATLAB/MATLAB_Runtime"
 
 # Set LD_LIBRARY_PATH for MATLAB Runtime
-ENV LD_LIBRARY_PATH="/usr/local/MATLAB/MATLAB_Runtime/R2024a/bin/glnxa64:$LD_LIBRARY_PATH"
+# ENV LD_LIBRARY_PATH="/usr/local/MATLAB/MATLAB_Runtime/R2024a/bin/glnxa64"
 
 # Download and install MATLAB Runtime R2024a (~3.8GB)
 RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip -P /tmp && \
@@ -120,9 +120,10 @@ RUN mkdir -p $SIMNIBSDIR/resources/ElectrodeCaps_MNI/ && \
 RUN execstack -s /ti-csc/analyzer/field-analysis/process_mesh_files && \
     execstack -s /ti-csc/optimizer/field-analysis/process_mesh_files
 
-# Entry point script
+# Copy the entrypoint script and ensure correct permissions and line endings
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh && \
+    dos2unix /usr/local/bin/entrypoint.sh
 
 # Set working directory to TI-CSC
 WORKDIR /ti-csc
