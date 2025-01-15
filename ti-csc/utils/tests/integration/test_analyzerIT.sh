@@ -7,7 +7,7 @@ cd /ti-csc/analyzer || { echo "Directory /ti-csc/analyzer does not exist"; exit 
 
 # Run the script with the required inputs
 {
-    echo "2"    # Choose subject "ernie"
+    echo "1"    # Choose subject "ernie"
     echo "1"    # Isotropic simulation
     echo "U"    # Unipolar simulation
     echo "1"    # Little_Pairs montage

@@ -97,17 +97,17 @@ RUN mkdir -p /simnibs && chmod -R 777 /simnibs && \
 ENV PATH="/root/SimNIBS-4.1/bin:$PATH"
 ENV SIMNIBSDIR="/root/SimNIBS-4.1"
 
-# Set MATLAB Runtime version and installation directory for R2024b
-ENV MATLAB_RUNTIME_VERSION="R2024b"
+# Set MATLAB Runtime version and installation directory
 ENV MATLAB_RUNTIME_INSTALL_DIR="/usr/local/MATLAB/MATLAB_Runtime"
-# Set environment variables for MATLAB Runtime
-ENV LD_LIBRARY_PATH="/usr/local/MATLAB/MATLAB_Runtime/R2024b/bin/glnxa64:$LD_LIBRARY_PATH"
 
-# Download and install MATLAB Runtime R2024b (~3.8GB)
-RUN wget https://ssd.mathworks.com/supportfiles/downloads/${MATLAB_RUNTIME_VERSION}/Release/1/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_${MATLAB_RUNTIME_VERSION}_Update_1_glnxa64.zip -P /tmp && \
-    unzip -q /tmp/MATLAB_Runtime_${MATLAB_RUNTIME_VERSION}_Update_1_glnxa64.zip -d /tmp/matlab_runtime_installer && \
+# Set LD_LIBRARY_PATH for MATLAB Runtime
+ENV LD_LIBRARY_PATH="/usr/local/MATLAB/MATLAB_Runtime/R2024a/bin/glnxa64:$LD_LIBRARY_PATH"
+
+# Download and install MATLAB Runtime R2024a (~3.8GB)
+RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip -P /tmp && \
+    unzip -q /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip -d /tmp/matlab_runtime_installer && \
     /tmp/matlab_runtime_installer/install -destinationFolder ${MATLAB_RUNTIME_INSTALL_DIR} -agreeToLicense yes -mode silent && \
-    rm -rf /tmp/MATLAB_Runtime_${MATLAB_RUNTIME_VERSION}_Update_1_glnxa64.zip /tmp/matlab_runtime_installer
+    rm -rf /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip /tmp/matlab_runtime_installer
 
 # Clone TI-CSC repository
 COPY ./ti-csc ti-csc
@@ -120,10 +120,9 @@ RUN mkdir -p $SIMNIBSDIR/resources/ElectrodeCaps_MNI/ && \
 RUN execstack -s /ti-csc/analyzer/field-analysis/process_mesh_files && \
     execstack -s /ti-csc/optimizer/field-analysis/process_mesh_files
 
-# Copy the entrypoint script and ensure correct permissions and line endings
+# Entry point script
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh && \
-    dos2unix /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Set working directory to TI-CSC
 WORKDIR /ti-csc
@@ -136,6 +135,13 @@ RUN git clone https://github.com/bats-core/bats-core.git /tmp/bats && \
 # Install pytest (~1MB)
 RUN pip3 install pytest && \
     rm -rf /root/.cache/pip
+
+# Prepare directories and clean after testing setup
+RUN mkdir -p /mnt/testing_project_dir /mnt/testing_project_dir/utils /mnt/testing_project_dir/Subjects /mnt/testing_project_dir/Simulations && \
+    curl -L https://github.com/simnibs/example-dataset/releases/latest/download/simnibs4_examples.zip -o /mnt/testing_project_dir/Subjects/simnibs4_examples.zip && \
+    unzip -q /mnt/testing_project_dir/Subjects/simnibs4_examples.zip -d /mnt/testing_project_dir/Subjects || echo "Zip file missing or download failed" && \
+    rm -f /mnt/testing_project_dir/Subjects/simnibs4_examples.zip && \
+    dos2unix /ti-csc/analyzer/*.sh /ti-csc/analyzer/field-analysis/*.sh /ti-csc/utils/tests/integration/*.sh
 
 # Prepare directories for testing
 RUN mkdir -p /mnt/testing_project_dir/utils /mnt/testing_project_dir/Subjects /mnt/testing_project_dir/Simulations
