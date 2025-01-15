@@ -45,6 +45,9 @@ fi
 mesh_dir=$1
 echo "Mesh directory: $mesh_dir"
 
+LD_LIBRARY_PATH = /usr/local/MATLAB/MATLAB_Runtime/R2024a/bin/glnxa64
+echo "LD_LIBRARY_PATH is ${LD_LIBRARY_PATH}"
+echo "--------------------------------------"
 # Execute the MATLAB compiled script with the provided arguments
 eval "\"${exe_dir}/process_mesh_files\"" "$mesh_dir"
 exit
