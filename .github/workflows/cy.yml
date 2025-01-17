@@ -13,14 +13,14 @@ jobs:
         name: Run Tests
         runs-on: ubuntu-20.04
         steps:
-            - name: Cleanup workspace
-              run: rm -rf ./build ./temp || true
+            # - name: Cleanup workspace
+            #   run: rm -rf ./build ./temp || true
             - name: Checkout code
               uses: actions/checkout@v2
-            - name: Free up disk space
-              run: |
-                chmod +x ./free_disk_space.sh
-                ./free_disk_space.sh
+            # - name: Free up disk space
+            #   run: |
+            #     chmod +x ./free_disk_space.sh
+            #     ./free_disk_space.sh
             - name: Run docker build
               run: docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "."
             - name: Running unit tests
