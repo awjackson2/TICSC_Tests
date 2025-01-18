@@ -28,13 +28,13 @@ jobs:
 
       # 2) Pull the private image from Docker Hub
       - name: Pull Docker Image
-        run: docker pull awjackson/ticsctest:latest
+        run: docker pull awjackson/ticsctest
 
       # 3) Run Python unit tests inside the pulled image
       - name: Running Python unit tests
         run: |
           sudo docker run --rm \
-            awjackson/ticsctest:latest \
+            awjackson/ticsctest \
             bash -c "simnibs_python -m pytest /ti-csc/utils/tests/unit" \
           || (echo 'Python unit tests failed. Reviewing logs:' && exit 1)
 
@@ -42,7 +42,7 @@ jobs:
       - name: Running Bash unit tests
         run: |
           sudo docker run --rm \
-            awjackson/ticsctest:latest \
+            awjackson/ticsctest \
             bash -c 'bats /ti-csc/utils/tests/unit/' \
           || (echo 'Bash unit tests failed. Reviewing logs:' && exit 1)
 
@@ -53,7 +53,7 @@ jobs:
         run: |
           sudo docker run \
             -v /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.24.1:/usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.25.1 \
-            --rm awjackson/ticsctest:latest \
+            --rm awjackson/ticsctest \
             bash -c "\
               chmod +x /ti-csc/utils/tests/integration/test_analyzerIT.sh && \
               chmod +x /ti-csc/analyzer/field-analysis/process_mesh_files && \
