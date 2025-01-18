@@ -21,6 +21,11 @@ jobs:
             #   run: |
             #     chmod +x ./free_disk_space.sh
             #     ./free_disk_space.sh
+            - name: Cleanup Disk Space
+              run: |
+                sudo rm -rf /tmp/*
+                sudo docker system prune --all --force --volumes
+                sudo rm -rf ~/.npm ~/.cache ~/.nuget ~/.yarn
             - name: Run docker build
               run: docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "."
             - name: Running unit tests
