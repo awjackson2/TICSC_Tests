@@ -11,7 +11,7 @@ on:
 jobs:
   run-tests:
     name: Run Tests
-    runs-on: ubuntu-20.04
+    runs-on: [self-hosted, large-runner] # Specify the self-hosted runner tag here
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -22,15 +22,15 @@ jobs:
           sudo docker system prune --all --force --volumes
           sudo rm -rf ~/.npm ~/.cache ~/.nuget ~/.yarn
 
-      # 1) Log in to Docker Hub using your stored GitHub secrets
+      # Log in to Docker Hub using stored GitHub secrets
       - name: Docker Login
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      # 2) Pull the private image from Docker Hub
+      # Pull the private image from Docker Hub
       - name: Pull Docker Image
         run: docker pull awjackson/ticsctest
 
-      # 3) Run Python unit tests inside the pulled image
+      # Run Python unit tests inside the pulled image
       - name: Running Python unit tests
         run: |
           sudo docker run --rm \
@@ -38,7 +38,7 @@ jobs:
             bash -c "simnibs_python -m pytest /ti-csc/utils/tests/unit" \
           || (echo 'Python unit tests failed. Reviewing logs:' && exit 1)
 
-      # 4) Run Bash unit tests inside the pulled image
+      # Run Bash unit tests inside the pulled image
       - name: Running Bash unit tests
         run: |
           sudo docker run --rm \
@@ -46,8 +46,7 @@ jobs:
             bash -c 'bats /ti-csc/utils/tests/unit/' \
           || (echo 'Bash unit tests failed. Reviewing logs:' && exit 1)
 
-      # 5) Run integration tests. 
-      #    (Note the volume mapping in your original file is preserved if needed.)
+      # Run integration tests with volume mapping
       - name: Running integration tests
         if: always()
         run: |
