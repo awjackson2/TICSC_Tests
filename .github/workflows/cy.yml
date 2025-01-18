@@ -11,7 +11,7 @@ on:
 jobs:
   run-tests:
     name: Run Tests
-    runs-on: [self-hosted, large-runner] # Specify the self-hosted runner tag here
+    runs-on: ubuntu-20.04-large # Specify the self-hosted runner tag here
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
