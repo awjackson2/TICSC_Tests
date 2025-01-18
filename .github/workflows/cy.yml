@@ -1,65 +1,46 @@
 name: Run test suite
 
 on: 
-  pull_request:
-    branches:
-      - main
-  push:
-    branches:
-      - main
+    pull_request:
+        branches:
+            - main
+    push:
+        branches:
+            - main
 
 jobs:
-  run-tests:
-    name: Run Tests
-    runs-on: ubuntu-20.04-large # Specify the self-hosted runner tag here
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Cleanup Disk Space
-        run: |
-          sudo rm -rf /tmp/*
-          sudo docker system prune --all --force --volumes
-          sudo rm -rf ~/.npm ~/.cache ~/.nuget ~/.yarn
-
-      # Log in to Docker Hub using stored GitHub secrets
-      - name: Docker Login
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-      # Pull the private image from Docker Hub
-      - name: Pull Docker Image
-        run: docker pull awjackson/ticsctest
-
-      # Run Python unit tests inside the pulled image
-      - name: Running Python unit tests
-        run: |
-          sudo docker run --rm \
-            awjackson/ticsctest \
-            bash -c "simnibs_python -m pytest /ti-csc/utils/tests/unit" \
-          || (echo 'Python unit tests failed. Reviewing logs:' && exit 1)
-
-      # Run Bash unit tests inside the pulled image
-      - name: Running Bash unit tests
-        run: |
-          sudo docker run --rm \
-            awjackson/ticsctest \
-            bash -c 'bats /ti-csc/utils/tests/unit/' \
-          || (echo 'Bash unit tests failed. Reviewing logs:' && exit 1)
-
-      # Run integration tests with volume mapping
-      - name: Running integration tests
-        if: always()
-        run: |
-          sudo docker run \
-            -v /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.24.1:/usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.25.1 \
-            --rm awjackson/ticsctest \
-            bash -c "\
-              chmod +x /ti-csc/utils/tests/integration/test_analyzerIT.sh && \
-              chmod +x /ti-csc/analyzer/field-analysis/process_mesh_files && \
-              /ti-csc/utils/tests/integration/test_analyzerIT.sh \
-            " || (echo 'Integration tests failed. Reviewing logs:' && exit 1)
-
-      - name: Cleanup Docker
-        if: always()
-        run: |
-          sudo docker system prune --all --force
+    run-tests:
+        name: Run Tests
+        runs-on: ubuntu-20.04
+        steps:
+            - name: Cleanup workspace
+              run: rm -rf ./build ./temp || true
+            - name: Checkout code
+              uses: actions/checkout@v2
+            - name: Free up disk space
+              run: |
+                chmod +x ./free_disk_space.sh
+                ./free_disk_space.sh
+            - name: Run docker build
+              run: docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "."
+            - name: Running unit tests
+              run: |
+                sudo docker run --rm ticsctests bash -c "simnibs_python -m pytest /ti-csc/utils/tests/unit" || \
+                (echo "Python unit tests failed. Reviewing logs:" && exit 1)
+                sudo docker run --rm ticsctests bash -c "bats /ti-csc/utils/tests/unit/" || \
+                (echo "Bash unit tests failed. Reviewing logs:" && exit 1)
+            - name: Running integration tests
+              if: always() 
+              run: |
+                docker run \
+                  -v /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.24.1:/usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.25.1 \
+                  --rm ticsctests bash -c "\
+                  chmod +x /ti-csc/utils/tests/integration/test_analyzerIT.sh && \
+                  chmod +x /ti-csc/analyzer/field-analysis/process_mesh_files && \
+                  /ti-csc/utils/tests/integration/test_analyzerIT.sh || \
+                  (echo 'Integration tests failed. Reviewing logs:' && exit 1)"
+            - name: Cleanup Docker
+              if: always() 
+              run: |
+                sudo docker system prune --all --force
+      
