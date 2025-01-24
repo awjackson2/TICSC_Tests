@@ -18,7 +18,7 @@ find_matlab_runtime() {
         "/usr/local/MATLAB/MATLAB_Runtime/R2024a"
         "/usr/local/MATLAB/MATLAB_Runtime/v951"
         "/opt/MATLAB/MATLAB_Runtime/R2024a"
-        "/home/$USER/MATLAB_Runtime/R2024a"
+        # "/home/$USER/MATLAB_Runtime/R2024a"
     )
 
     echo "[DEBUG] Searching for MATLAB Runtime in potential paths:"
