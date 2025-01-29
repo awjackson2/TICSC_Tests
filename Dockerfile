@@ -57,6 +57,6 @@ RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deplo
 
 # Set working directory
 WORKDIR /ti-csc
-
+#
 # Set the entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
