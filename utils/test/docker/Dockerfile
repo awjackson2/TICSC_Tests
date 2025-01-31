@@ -79,9 +79,9 @@ RUN mkdir -p /mnt/testing_project_dir/utils /mnt/testing_project_dir/Subjects /m
     dos2unix /ti-csc/analyzer/*.sh /ti-csc/analyzer/field-analysis/*.sh /ti-csc/utils/test/integration/*.sh
 
 # Copy testing data
-COPY /utils/test/data/montage_list.json /mnt/testing_project_dir/utils
-COPY /utils/test/data/roi_list.json /mnt/testing_project_dir/utils
-COPY /utils/test/data/EGI_template.csv /mnt/testing_project_dir/Subjects/m2m_ernie/eeg_positions/
+COPY /utils/test/data/utils/montage_list.json /mnt/testing_project_dir/utils
+COPY /utils/test/data/utils/roi_list.json /mnt/testing_project_dir/utils
+COPY /utils/test/data/utils/EGI_template.csv /mnt/testing_project_dir/Subjects/m2m_ernie/eeg_positions/
 
 # Set environment variables for project directories
 ENV LOCAL_PROJECT_DIR="/mnt/testing_project_dir"
