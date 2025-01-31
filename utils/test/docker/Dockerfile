@@ -13,7 +13,8 @@ RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx libglu1-mesa libosmesa6 mesa-utils \
     libqt5widgets5 libqt5gui5 libqt5core5a libqt5svg5 libqt5opengl5 \
     libreoffice bc dc \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    execstack dos2unix\ 
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/
 
 # Set language environment
 ENV LANG="en_GB.UTF-8"
@@ -48,7 +49,7 @@ RUN wget https://ssd.mathworks.com/supportfiles/downloads/R2024a/Release/1/deplo
     rm -rf /tmp/MATLAB_Runtime_R2024a_Update_1_glnxa64.zip /tmp/matlab_runtime_installer
 
 # Copy the TI-CSC repository
-COPY ./ti-csc /ti-csc
+COPY . /ti-csc
 
 # Set up SimNIBS resources
 RUN mkdir -p $SIMNIBSDIR/resources/ElectrodeCaps_MNI/ && \
@@ -59,7 +60,7 @@ RUN execstack -s /ti-csc/analyzer/field-analysis/process_mesh_files && \
     execstack -s /ti-csc/optimizer/field-analysis/process_mesh_files
 
 # Copy entrypoint script and ensure proper permissions
-COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY ./utils/test/scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh && dos2unix /usr/local/bin/entrypoint.sh
 
 # Set working directory
@@ -75,12 +76,12 @@ RUN mkdir -p /mnt/testing_project_dir/utils /mnt/testing_project_dir/Subjects /m
     curl -L https://github.com/simnibs/example-dataset/releases/latest/download/simnibs4_examples.zip -o /mnt/testing_project_dir/Subjects/simnibs4_examples.zip && \
     unzip -q /mnt/testing_project_dir/Subjects/simnibs4_examples.zip -d /mnt/testing_project_dir/Subjects || echo "Zip file missing or download failed" && \
     rm -f /mnt/testing_project_dir/Subjects/simnibs4_examples.zip && \
-    dos2unix /ti-csc/analyzer/*.sh /ti-csc/analyzer/field-analysis/*.sh /ti-csc/utils/tests/integration/*.sh
+    dos2unix /ti-csc/analyzer/*.sh /ti-csc/analyzer/field-analysis/*.sh /ti-csc/utils/test/integration/*.sh
 
 # Copy testing data
-COPY /ti-csc/utils/testing_data/utils/montage_list.json /mnt/testing_project_dir/utils
-COPY /ti-csc/utils/testing_data/utils/roi_list.json /mnt/testing_project_dir/utils
-COPY /ti-csc/utils/testing_data/utils/EGI_template.csv /mnt/testing_project_dir/Subjects/m2m_ernie/eeg_positions/
+COPY /utils/test/data/utils/montage_list.json /mnt/testing_project_dir/utils
+COPY /utils/test/data/utils/roi_list.json /mnt/testing_project_dir/utils
+COPY /utils/test/data/utils/EGI_template.csv /mnt/testing_project_dir/Subjects/m2m_ernie/eeg_positions/
 
 # Set environment variables for project directories
 ENV LOCAL_PROJECT_DIR="/mnt/testing_project_dir"
