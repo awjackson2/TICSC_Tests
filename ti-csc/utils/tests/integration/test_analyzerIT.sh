@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Exit immediately if a command exits with a non-zero status
 set -e
 
@@ -20,7 +19,6 @@ EXPECTED_DIR="/mnt/testing_project_dir/Simulations/sim_ernie"
 
 # Define the expected files
 EXPECTED_FILES=(
-    # FEM files - TI_Little_Pairs
     "FEM/TI_Little_Pairs/TI.msh.opt"
     "FEM/TI_Little_Pairs/ernie_TDCS_1_el_currents.geo"
     "FEM/TI_Little_Pairs/ernie_TDCS_1_scalar.msh"
@@ -29,21 +27,16 @@ EXPECTED_FILES=(
     "FEM/TI_Little_Pairs/ernie_TDCS_2_scalar.msh"
     "FEM/TI_Little_Pairs/ernie_TDCS_2_scalar.msh.opt"
     "FEM/TI_Little_Pairs/fields_summary.txt"
-    # ROI_analysis files
     "ROI_analysis/mean_max_values.txt"
-    # Whole-Brain-mesh files
     "Whole-Brain-mesh/ernie_TI_Little_Pairs_TI.msh"
     "Whole-Brain-mesh/results/ernie_TI_Little_Pairs_TI_histogram.png"
     "Whole-Brain-mesh/results/ernie_TI_Little_Pairs_TI_peaks_focality.mat"
     "Whole-Brain-mesh/results/ernie_TI_Little_Pairs_TI_surface.png"
     "Whole-Brain-mesh/results/summary.txt"
-    # montage_imgs files
     "montage_imgs/Little_Pairs_highlighted_visualization.png"
-    # niftis files
     "niftis/Anterior-sphere.nii.gz"
     "niftis/grey_ernie_TI_Little_Pairs_TI_output_MNI_TI_max.nii"
     "niftis/white_ernie_TI_Little_Pairs_TI_output_MNI_TI_max.nii"
-    # parcellated_mesh files
     "parcellated_mesh/grey_ernie_TI_Little_Pairs_TI.msh"
     "parcellated_mesh/white_ernie_TI_Little_Pairs_TI.msh"
 )

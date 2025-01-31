@@ -37,7 +37,7 @@ echo "LD_LIBRARY_PATH is ${LD_LIBRARY_PATH}"
 echo "--------------------------------------"
 
 # Create a symlink if the exact version of the library is missing
-if [ ! -f "${MCROOT}/runtime/glnxa64/libmwmclmcrrt.so.24.1" ]; then
+if [ ! -f "${MCROOT}/runtime/glnxa64/libmwmclmcrrt.so.25.1" ]; then
     echo "libmwmclmcrrt.so.25.1 not found. Attempting to create a symlink to libmwmclmcrrt.so.24.1"
     ln -s ${MCROOT}/runtime/glnxa64/libmwmclmcrrt.so.24.1 ${MCROOT}/runtime/glnxa64/libmwmclmcrrt.so.25.1
 fi
