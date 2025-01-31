@@ -78,6 +78,7 @@ jobs:
           when: always
           command: sudo docker system prune --all --force
 
+          # ADDED COMMENT FOR TESTING
 # Workflow: Runs only on PRs targeting `main`
 workflows:
   version: 2
