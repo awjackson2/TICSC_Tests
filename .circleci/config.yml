@@ -2,43 +2,56 @@ version: 2.1
 
 executors:
   docker-executor:
-    machine: true  # This enables full VM with Docker daemon
+    machine: true  # Enables full VM instead of a Docker-in-Docker container
 
 jobs:
   run-tests:
     executor: docker-executor
     steps:
-      - checkout
+      # Step 1: Checkout the repository
+      - checkout 
+
+      # Step 2: Cleanup workspace to remove old build artifacts
       - run:
           name: Cleanup workspace
           command: rm -rf ./build ./temp || true
+
+      # Step 3: Free up disk space (optional)
       - run:
           name: Free up disk space
           command: |
             chmod +x ./free_disk_space.sh
             ./free_disk_space.sh
+
+      # Step 4: Ensure Docker Daemon is running
       - run:
-          name: Verify Docker Daemon is Running
+          name: Verify Docker Daemon
           command: |
-            sudo systemctl start docker
-            docker info
+            sudo systemctl start docker  # Start Docker if not already running
+            docker info  # Confirm Docker is working properly
+
+      # Step 5: Enable BuildKit for better Docker build performance
       - run:
-          name: Enable BuildKit
-          command: |
-            export DOCKER_BUILDKIT=1
+          name: Enable Docker BuildKit
+          command: export DOCKER_BUILDKIT=1
+
+      # Step 6: Build the Docker image
       - run:
-          name: Run docker build
+          name: Build Docker Image
           command: docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "."
+
+      # Step 7: Run Unit Tests (Python + Bash)
       - run:
-          name: Running unit tests
+          name: Running Unit Tests
           command: |
             sudo docker run --rm ticsctests bash -c "simnibs_python -m pytest /ti-csc/utils/tests/unit" || \
-            (echo "Python unit tests failed. Reviewing logs:" && exit 1)
+            (echo "Python unit tests failed. Reviewing logs..." && exit 1)
             sudo docker run --rm ticsctests bash -c "bats /ti-csc/utils/tests/unit/" || \
-            (echo "Bash unit tests failed. Reviewing logs:" && exit 1)
+            (echo "Bash unit tests failed. Reviewing logs..." && exit 1)
+
+      # Step 8: Run Integration Tests 
       - run:
-          name: Running integration tests
-          when: always
+          name: Running Integration Tests
           command: |
             docker run \
               -v /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.24.1:/usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.25.1 \
@@ -46,12 +59,15 @@ jobs:
               chmod +x /ti-csc/utils/tests/integration/test_analyzerIT.sh && \
               chmod +x /ti-csc/analyzer/field-analysis/process_mesh_files && \
               /ti-csc/utils/tests/integration/test_analyzerIT.sh || \
-              (echo 'Integration tests failed. Reviewing logs:' && exit 1)"
+              (echo 'Integration tests failed. Reviewing logs...' && exit 1)"
+
+      # Step 9: Cleanup Docker to free up space after tests
       - run:
           name: Cleanup Docker
           when: always
           command: sudo docker system prune --all --force
 
+# Workflow: Runs only on PRs targeting `main`
 workflows:
   version: 2
   test_pipeline:
@@ -59,6 +75,4 @@ workflows:
       - run-tests:
           filters:
             branches:
-              only:
-                - main
-                - features
+              only: main  # Runs only for PRs targeting `main`
