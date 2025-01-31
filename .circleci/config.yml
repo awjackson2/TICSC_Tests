@@ -1,9 +1,12 @@
 version: 2.1
 
+executors:
+  docker-executor:
+    machine: true  # This enables full VM with Docker daemon
+
 jobs:
   run-tests:
-    docker:
-      - image: ubuntu:20.04
+    executor: docker-executor
     steps:
       - checkout
       - run:
@@ -15,10 +18,14 @@ jobs:
             chmod +x ./free_disk_space.sh
             ./free_disk_space.sh
       - run:
-          name: Install Docker
+          name: Verify Docker Daemon is Running
           command: |
-            apt update
-            apt install -y docker.io
+            sudo systemctl start docker
+            docker info
+      - run:
+          name: Enable BuildKit
+          command: |
+            export DOCKER_BUILDKIT=1
       - run:
           name: Run docker build
           command: docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "."
