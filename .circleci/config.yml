@@ -35,7 +35,7 @@ jobs:
           name: Enable Docker BuildKit
           command: export DOCKER_BUILDKIT=1
 
-      # Step 6: Build the Docker image
+      # Step 6: Build the testing Docker image
       - run:
           name: Build Docker Image
           command: docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "."
