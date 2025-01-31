@@ -75,4 +75,6 @@ workflows:
       - run-tests:
           filters:
             branches:
-              only: main  # Runs only for PRs targeting `main`
+              only: 
+                - main  # Runs only for PRs targeting `main`
+                - features*  
