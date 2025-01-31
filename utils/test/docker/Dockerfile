@@ -83,6 +83,8 @@ COPY /utils/test/data/utils/montage_list.json /mnt/testing_project_dir/utils
 COPY /utils/test/data/utils/roi_list.json /mnt/testing_project_dir/utils
 COPY /utils/test/data/utils/EGI_template.csv /mnt/testing_project_dir/Subjects/m2m_ernie/eeg_positions/
 
+# new change
+
 # Set environment variables for project directories
 ENV LOCAL_PROJECT_DIR="/mnt/testing_project_dir"
 ENV PROJECT_DIR_NAME="testing_project_dir"
