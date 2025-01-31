@@ -60,7 +60,7 @@ RUN execstack -s /ti-csc/analyzer/field-analysis/process_mesh_files && \
     execstack -s /ti-csc/optimizer/field-analysis/process_mesh_files
 
 # Copy entrypoint script and ensure proper permissions
-COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY ./utils/test/scrips/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh && dos2unix /usr/local/bin/entrypoint.sh
 
 # Set working directory
