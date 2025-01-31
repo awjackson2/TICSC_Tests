@@ -72,11 +72,12 @@ jobs:
 
 # Workflow: Runs only on PRs targeting `main`#
 workflows:
-  version: 1
+  version: 2
   test_pipeline:
     jobs:
       - run-tests:
           filters:
             branches:
               ignore:
-                - main  # Ignore direct commits to `main`, only run on PRs to `main`
+                - main  # Prevents running when directly pushing to `main`
+    when: << pipeline.trigger_source >> == "pull-request"  # Runs only if triggered by a PR
