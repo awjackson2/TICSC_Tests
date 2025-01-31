@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx libglu1-mesa libosmesa6 mesa-utils \
     libqt5widgets5 libqt5gui5 libqt5core5a libqt5svg5 libqt5opengl5 \
     libreoffice bc dc \
-    execstack \ 
+    execstack dos2unix\ 
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/
 
 # Set language environment
