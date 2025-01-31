@@ -19,7 +19,7 @@ jobs:
             echo "Not a pull request build. Skipping tests."
             circleci-agent step halt
           fi
-    
+  
 
       # Step 2: Cleanup workspace to remove old build artifacts
       - run:
