@@ -76,7 +76,7 @@ RUN mkdir -p /mnt/testing_project_dir/utils /mnt/testing_project_dir/Subjects /m
     curl -L https://github.com/simnibs/example-dataset/releases/latest/download/simnibs4_examples.zip -o /mnt/testing_project_dir/Subjects/simnibs4_examples.zip && \
     unzip -q /mnt/testing_project_dir/Subjects/simnibs4_examples.zip -d /mnt/testing_project_dir/Subjects || echo "Zip file missing or download failed" && \
     rm -f /mnt/testing_project_dir/Subjects/simnibs4_examples.zip && \
-    dos2unix /ti-csc/analyzer/*.sh /ti-csc/analyzer/field-analysis/*.sh /ti-csc/utils/tests/integration/*.sh
+    dos2unix /ti-csc/analyzer/*.sh /ti-csc/analyzer/field-analysis/*.sh /ti-csc/utils/test/integration/*.sh
 
 # Copy testing data
 COPY /utils/test/data/montage_list.json /mnt/testing_project_dir/utils
