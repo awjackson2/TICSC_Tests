@@ -77,4 +77,4 @@ workflows:
             branches:
               only: 
                 - main  # Runs only for PRs targeting `main`
-                - features*  
+                - features 
