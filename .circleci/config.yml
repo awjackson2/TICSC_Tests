@@ -44,14 +44,13 @@ jobs:
               -t ticsctests:latest \
               .
 
-
       # Step 7: Run Unit Tests (Python + Bash)
       - run:
           name: Running Unit Tests
           command: |
-            sudo docker run --rm ticsctests bash -c "simnibs_python -m pytest /ti-csc/utils/tests/unit" || \
+            sudo docker run --rm ticsctests bash -c "simnibs_python -m pytest /ti-csc/utils/test/unit" || \
             (echo "Python unit tests failed. Reviewing logs..." && exit 1)
-            sudo docker run --rm ticsctests bash -c "bats /ti-csc/utils/tests/unit/" || \
+            sudo docker run --rm ticsctests bash -c "bats /ti-csc/utils/test/unit/" || \
             (echo "Bash unit tests failed. Reviewing logs..." && exit 1)
 
       # Step 8: Run Integration Tests 
@@ -59,11 +58,10 @@ jobs:
           name: Running Integration Tests
           command: |
             docker run \
-              -v /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.24.1:/usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.25.1 \
               --rm ticsctests bash -c "\
               chmod +x /ti-csc/utils/tests/integration/test_analyzerIT.sh && \
               chmod +x /ti-csc/analyzer/field-analysis/process_mesh_files && \
-              /ti-csc/utils/tests/integration/test_analyzerIT.sh || \
+              /ti-csc/utils/test/integration/test_analyzerIT.sh || \
               (echo 'Integration tests failed. Reviewing logs...' && exit 1)"
 
       # Step 9: Cleanup Docker to free up space after tests
