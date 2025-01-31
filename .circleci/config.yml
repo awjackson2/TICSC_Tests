@@ -11,6 +11,15 @@ jobs:
       # Step 1: Checkout the repository
       - checkout 
 
+      # Step 1.5: Check for Pull Request
+      - run:
+        name: Check for Pull Request
+        command: |
+          if [ -z "$CIRCLE_PULL_REQUEST" ]; then
+            echo "Not a pull request build. Skipping tests."
+            circleci-agent step halt
+          fi
+
       # Step 2: Cleanup workspace to remove old build artifacts
       - run:
           name: Cleanup workspace
