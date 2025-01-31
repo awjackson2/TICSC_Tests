@@ -15,45 +15,31 @@ jobs:
         steps:
             - name: Cleanup workspace
               run: rm -rf ./build ./temp || true
-              
             - name: Checkout code
               uses: actions/checkout@v2
-
             - name: Free up disk space
               run: |
                 chmod +x ./free_disk_space.sh
                 ./free_disk_space.sh
-
             - name: Run docker build
               run: docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "."
-
             - name: Running unit tests
               run: |
-                sudo docker run --rm \
-                  -v ${{ github.workspace }}/ti-csc:/ti-csc \
-                  -v ${{ github.workspace }}/mnt/testing_project_dir:/mnt/testing_project_dir \
-                  ticsctests bash -c "simnibs_python -m pytest /ti-csc/utils/tests/unit" || \
-                  (echo "Python unit tests failed. Reviewing logs:" && exit 1)
-                
-                sudo docker run --rm \
-                  -v ${{ github.workspace }}/ti-csc:/ti-csc \
-                  -v ${{ github.workspace }}/mnt/testing_project_dir:/mnt/testing_project_dir \
-                  ticsctests bash -c "bats /ti-csc/utils/tests/unit/" || \
-                  (echo "Bash unit tests failed. Reviewing logs:" && exit 1)
-
+                sudo docker run --rm ticsctests bash -c "simnibs_python -m pytest /ti-csc/utils/tests/unit" || \
+                (echo "Python unit tests failed. Reviewing logs:" && exit 1)
+                sudo docker run --rm ticsctests bash -c "bats /ti-csc/utils/tests/unit/" || \
+                (echo "Bash unit tests failed. Reviewing logs:" && exit 1)
             - name: Running integration tests
               if: always() 
               run: |
-                docker run --rm \
-                  -v ${{ github.workspace }}/ti-csc:/ti-csc \
-                  -v ${{ github.workspace }}/mnt/testing_project_dir:/mnt/testing_project_dir \
+                docker run \
                   -v /usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.24.1:/usr/local/MATLAB/MATLAB_Runtime/R2024a/runtime/glnxa64/libmwmclmcrrt.so.25.1 \
-                  ticsctests bash -c "\
+                  --rm ticsctests bash -c "\
                   chmod +x /ti-csc/utils/tests/integration/test_analyzerIT.sh && \
                   chmod +x /ti-csc/analyzer/field-analysis/process_mesh_files && \
                   /ti-csc/utils/tests/integration/test_analyzerIT.sh || \
                   (echo 'Integration tests failed. Reviewing logs:' && exit 1)"
-
             - name: Cleanup Docker
               if: always() 
-              run: sudo docker system prune --all --force
+              run: |
+                sudo docker system prune --all --force
