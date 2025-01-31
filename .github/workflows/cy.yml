@@ -25,7 +25,7 @@ jobs:
                 ./free_disk_space.sh
 
             - name: Run docker build
-              run: docker build --pull --rm -f "Dockerfile.simnibs" -t ticsctests:latest "."
+              run: docker build --pull --rm -f "Dockerfile" -t ticsctests:latest "."
 
             - name: Running unit tests
               run: |
