@@ -2,14 +2,14 @@ version: 2.1
 
 executors:
   docker-executor:
-    machine: true  # Enables full VM instead of a Docker-in-Docker container
+    machine: true  # Enables a full VM instead of a Docker-in-Docker container
 
 jobs:
   run-tests:
     executor: docker-executor
     steps:
       # Step 1: Checkout the repository
-      - checkout 
+      - checkout
 
       # Step 2: Cleanup workspace to remove old build artifacts
       - run:
@@ -49,16 +49,15 @@ jobs:
           name: Running Unit Tests
           command: |
             sudo docker run --rm ticsctests bash -c "simnibs_python -m pytest /ti-csc/utils/test/unit" || \
-            (echo "Python unit tests failed. Reviewing logs..." && exit 1)
+              (echo "Python unit tests failed. Reviewing logs..." && exit 1)
             sudo docker run --rm ticsctests bash -c "bats /ti-csc/utils/test/unit/" || \
-            (echo "Bash unit tests failed. Reviewing logs..." && exit 1)
+              (echo "Bash unit tests failed. Reviewing logs..." && exit 1)
 
       # Step 8: Run Integration Tests 
       - run:
           name: Running Integration Tests
           command: |
-            docker run \
-              --rm ticsctests bash -c "\
+            docker run --rm ticsctests bash -c "\
               chmod +x /ti-csc/utils/test/integration/test_analyzerIT.sh && \
               chmod +x /ti-csc/analyzer/field-analysis/process_mesh_files && \
               /ti-csc/utils/test/integration/test_analyzerIT.sh || \
@@ -70,7 +69,8 @@ jobs:
           when: always
           command: sudo docker system prune --all --force
 
-# Workflow: Runs only on PRs targeting `main`#
+          # ADDED COMMENT FOR TESTING
+# Workflow: Runs only on PRs targeting `main`
 workflows:
   version: 2
   test_pipeline:
@@ -80,4 +80,3 @@ workflows:
             branches:
               ignore:
                 - main  # Prevents running when directly pushing to `main`
-    when: << pipeline.trigger_source >> == "pull-request"  # Runs only if triggered by a PR
