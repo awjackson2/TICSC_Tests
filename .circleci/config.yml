@@ -20,8 +20,8 @@ jobs:
       - run:
           name: Free up disk space
           command: |
-            chmod +x utils\test\scripts\free_disk_space.sh
-            utils\test\scripts\free_disk_space.sh
+            chmod +x ./utils/test/scripts/free_disk_space.sh
+            ./utils/test/scripts/free_disk_space.sh
 
       # Step 4: Ensure Docker Daemon is running
       - run:
