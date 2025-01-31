@@ -72,12 +72,11 @@ jobs:
 
 # Workflow: Runs only on PRs targeting `main`
 workflows:
-  version: 2
+  version: 1
   test_pipeline:
     jobs:
       - run-tests:
           filters:
             branches:
-              only: 
-                - main  # Runs only for PRs targeting `main`
-                - features 
+              ignore:
+                - main  # Ignore direct commits to `main`, only run on PRs to `main`
