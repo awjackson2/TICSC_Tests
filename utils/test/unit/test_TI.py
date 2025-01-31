@@ -7,7 +7,7 @@ from pytest import MonkeyPatch
 
 @pytest.fixture
 def set_sys_variables(monkeypatch):
-    monkeypatch.setattr(sys, 'argv', ["script_name.py", "test_arg1", "test_arg2", "/ti-csc/utils/test/data/utils","test_arg4"])
+    monkeypatch.setattr(sys, 'argv', ["script_name.py", "test_arg1", "test_arg2", "/ti-csc_BUG_/utils/test/data/utils","test_arg4"])
     # Import mTI after modifying sys.argv
     print("Using Docker")
     from analyzer import TI    
