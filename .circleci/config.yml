@@ -70,7 +70,7 @@ jobs:
           when: always
           command: sudo docker system prune --all --force
 
-# Workflow: Runs only on PRs targeting `main`
+# Workflow: Runs only on PRs targeting `main`#
 workflows:
   version: 1
   test_pipeline:
